@@ -1,0 +1,111 @@
+@use '../../../styles.scss' as *;
+
+main {
+    width: 100%;
+    height: 100vh;
+    background-color: $bg-green;
+    @include flex-main;
+
+    .meal-container {
+        @include flex-main;
+        flex-direction: column;
+        position: relative;
+        top: 0;
+        overflow: hidden;
+        height: 100vh;
+        width: 480px;
+
+        img {
+            width: clamp(295px, 40vw, 470px);
+            height: clamp(295px, 40vw, 450px);
+        }
+
+        .meal-3 {
+            position: absolute;
+            top: 0px
+        }
+
+        .meal-2 {
+            position: absolute;
+            top: 270px
+        }
+
+        .meal-1 {
+            position: absolute;
+            top: 500px
+        }
+    }
+
+    .text-conatiner {
+        padding-left: 50px;
+        width: 70%;
+        height: 100vh;
+        position: relative;
+        top: 0;
+
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        color: white;
+
+        .title-conatiner {
+            position: absolute;
+            top: 200px;
+
+            h2 {
+                font-size: clamp(24px, 7vw, 48px);
+                font-weight: 600;
+                font-family: 'Quicksand';
+            }
+
+            h1 {
+                font-size: clamp(64px, 7vw, 104px);
+                font-weight: 700;
+                font-family: 'Ubuntu';
+            }
+        }
+
+        .start-btn {
+            font-family: 'Quicksand';
+            margin-top: 50px;
+            background-color: $interactive-bg;
+            color: $btn-font-color;
+            font-size: 24px;
+            padding: 10px;
+            transition: transform 0.3s ease-in-out;
+
+            &:hover {
+                transform: scale(1.1);
+                background-color: $interactive-bg-hover;
+            }
+        }
+    }
+}
+
+.btn-cookboock-container {
+    display: flex;
+    gap: 30px;
+    position: absolute;
+    bottom: 60px;
+
+    h3 {
+        font-size: clamp(24px, 7vw, 32px);
+        font-weight: 500;
+        font-family: 'Ubuntu';
+    }
+
+    button {
+        color: white;
+        font-family: 'Quicksand';
+        @include flex-center;
+        gap: 15px;
+        font-size: 20px;
+        font-weight: 500;
+        padding: 5px;
+
+        &:hover{
+            background-color: #faf0e654;
+        }
+    }
+}
