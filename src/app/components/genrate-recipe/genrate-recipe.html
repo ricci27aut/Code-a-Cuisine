@@ -1,0 +1,37 @@
+<main>
+    <div  class="title-container">
+        <h1>Generate recipe</h1>
+        <h2>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</h2>
+    </div>
+
+    <section>
+        <div class="input-content container-style">
+
+            <div class="ingredient-container">
+            <h3 class="text">Ingredient</h3>
+            <input #ingred type="text">
+            </div>
+
+            <div class="add-container">
+                <h3 class="text">Serving size</h3>
+                <div>
+                    <input #quantity type="number" placeholder="100">
+                    <img (click)="addIngredient()" src="assets/img/+.png">
+                </div>
+            </div>
+        </div>
+
+        <div class="addlist container-style">
+            <h3 class="text">List of your Ingredients</h3>
+            <div *ngFor="let item of ingredients(), let i = index">
+                <div>
+                <i>{{item.quantity}}g{{item.ingred}}</i>
+                <img (click)="deletItem(i)" src="assets/img/delete.png">
+            </div>
+            </div>
+        </div>
+
+        <button routerLink="/Preferences">next Step</button>
+    </section>
+
+</main>

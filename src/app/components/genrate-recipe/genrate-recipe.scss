@@ -1,0 +1,109 @@
+@use '../../../styles.scss' as *;
+
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 50px;
+}
+
+section {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+    width: 100%;
+
+    .input-content {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        gap: 20px;
+
+
+        .ingredient-container {
+            width: 60%;
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .add-container {
+            width: 30%;
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+
+            div{
+                display: flex;
+                align-items: start;
+                justify-content: center;
+                gap: 8px;
+                img{
+                    width: 18px;
+                    cursor: pointer;
+                }
+            }
+
+            input {
+                width: 40px;
+            }
+        }
+    }
+
+    .addlist {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+
+    h1 {
+        font-size: 54px;
+        font-weight: 600;
+        font-family: 'Quicksand';
+        color: $font-green;
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: 500;
+        font-family: 'Quicksand';
+    }
+}
+
+.container-style {
+    background-color: $container-green;
+    border-radius: 16px;
+    min-width: 400px;
+    min-height: 120px;
+    padding: 8px;
+}
+
+input{
+    background-color: $input;
+    border-radius: 16px;
+    border-color: transparent;
+    
+}
+
+.text{
+    color: $font-green;
+    font-family: 'Quicksand';
+    font-size: 20px;
+    font-weight: 500;
+}
