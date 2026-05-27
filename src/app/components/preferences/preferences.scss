@@ -1,0 +1,26 @@
+@use '../../../styles.scss' as *;
+
+main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.count-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    .counter-style{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+section{
+    background-color: $container-green;
+    border-radius: 16px;
+    padding:10px;
+}

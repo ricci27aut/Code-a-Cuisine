@@ -1,14 +1,42 @@
 <main>
     <h1>Choose your preferences</h1>
-    <div>
-        <div></div>
-        <div></div>
+    <div class="count-container">
+        <div>
+            <h2>How many portions you need?</h2>
+            <div class="counter-style">
+                <img (click)="countDown('portions')" src="assets/img/preferences/delet-box.png">
+                <p>{{portions}}</p><p>Portions</p>
+                <img (click)="countUp('portions')" src="assets/img/preferences/add-box.png">
+            </div>
+        </div>
+        <div> 
+            <h2>How many are cooking?</h2>
+             <div class="counter-style">
+                <img (click)="countDown('persons')" src="assets/img/preferences/delet-box.png">
+                <p>{{persons}}</p><p>Persons</p>
+                <img (click)="countUp('persons')" src="assets/img/preferences/add-box.png">
+            </div>
+        </div>
     </div>
+
     <section>
         <div>
-            <div></div><div></div><div></div>
+            <h1>Cooking time:</h1>
+            <div>Qick</div>
+            <div>Medium</div>
+            <div>Complex</div>
         </div>
-        <div *for=""></div>
-        <div></div>
+        <div>
+            <h1>Cuisine</h1>
+            <div *ngFor="let countrie of countries, let i = index">
+                <p>{{countrie}}</p>
+            </div>
+        </div>
+        <div>
+            <h1>Diet preferences</h1>
+             <div *ngFor="let prefer of preferencs, let i = index">
+                <p >{{prefer}}</p>
+            </div>
+        </div>
     </section>
 </main>
