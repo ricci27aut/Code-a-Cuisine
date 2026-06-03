@@ -1,0 +1,18 @@
+<main>
+    <section [class.dnone]="!dataLoaded">
+    <div>
+        <div><h1>The recipe results</h1>
+            <span>We took what you have and let our AI do the thinking. Here are 3 easy recipes you can make right now!</span>
+        </div>
+        <img src="assets/img/results/robot-arm.png">
+    </div>
+
+    </section>
+
+   <article class="loading-animation" [class.dnone]="dataLoaded">
+    <div>
+    <img src="assets/img/loading-animation/laoding.gif">
+    </div>
+    <h4>Generating ...</h4>
+   </article>
+</main>

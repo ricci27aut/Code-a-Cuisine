@@ -1,10 +1,11 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { N8nApi } from '../../shared/n8n-api';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-preferences',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './preferences.html',
   styleUrl: './preferences.scss',
 })

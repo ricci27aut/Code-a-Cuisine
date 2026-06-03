@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { StartScreen } from '../app/components/start-screen/start-screen';
 import { GenrateRecipe } from '../app/components/genrate-recipe/genrate-recipe';
 import { Preferences} from '../app/components/preferences/preferences'
+import { Results } from '../app/components/results/results';
 
 export const routes: Routes = [
     {
@@ -15,5 +16,9 @@ export const routes: Routes = [
     {
         path: "Preferences",
         component: Preferences
+    },
+    {
+        path: "Results",
+        component: Results
     }
 ];
