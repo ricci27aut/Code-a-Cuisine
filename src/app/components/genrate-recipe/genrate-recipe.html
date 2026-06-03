@@ -15,23 +15,23 @@
             <div class="add-container">
                 <h3 class="text">Serving size</h3>
                 <div>
-                    <input #quantity type="number" placeholder="100">
+                    <input #quantity type="number" class="no-spinner" placeholder="100" >
                     <img (click)="addIngredient()" src="assets/img/+.png">
                 </div>
             </div>
         </div>
 
+        <div class="flex-end">
         <div class="addlist container-style">
             <h3 class="text">List of your Ingredients</h3>
             <div *ngFor="let item of ingredients(), let i = index">
-                <div>
-                <i>{{item.quantity}}g{{item.ingred}}</i>
+                <div class="item-container">
+                <li>{{item.quantity}} {{item.ingred}}</li>
                 <img (click)="deletItem(i)" src="assets/img/delete.png">
             </div>
             </div>
         </div>
-
-        <button routerLink="/Preferences">next Step</button>
+        <button [class.dnone]="!showNectBtn" routerLink="/Preferences" class="btn-primary" >next Step</button>
+        </div>
     </section>
-
 </main>

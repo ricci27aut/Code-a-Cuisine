@@ -1,26 +1,124 @@
 @use '../../../styles.scss' as *;
 
-main{
+main {
     display: flex;
     align-items: center;
     flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
+    color: $font-green;
 }
 
-.count-container{
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    padding: 50px 0 50px 0;
+}
+
+.count-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 20px;
+    width: 100%;
 
-    .counter-style{
+    .counter-style {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: start;
+        padding-top: 10px;
+        font-size: 20px;
+
+        img {
+            width: 20px;
+        }
+    }
+
+    h2 {
+        font-size: 20px;
+        font-weight: 500;
     }
 }
 
-section{
+section {
     background-color: $container-green;
     border-radius: 16px;
-    padding:10px;
+    padding: 20px;
+    margin-top: 50px;
+    width: 40%;
+}
+
+.count-value {
+    background-color: $container-green;
+    margin: 0 7px 0 7px;
+    padding: 0 5px 0 5px;
+}
+
+.margin-right {
+    margin-right: 7px;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 20px;
+        margin-right: 5px;
+    }
+}
+
+.chosse-container {
+    padding: 20px 0 20px 0;
+    @include flex-start;
+    gap: 20px;
+
+    .chosse-p {
+        background-color: $interactive-bg;
+        width: fit-content;
+        border-radius: 16px;
+        padding: 0px 5px 0px 5px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $interactive-bg-hover;
+        }
+
+    }
+}
+
+.possition-contnet {
+    @include flex-center;
+    flex-direction: column;
+    width: 40%;
+}
+
+.save-btn {
+    @include flex-center;
+    flex-direction: column;
+
+    button {
+        padding: 10px 15px;
+        background-color: $font-green;
+        color: white;
+        font-size: 20px;
+        font-weight: 600;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    margin-top: 40px;
+
+    p {
+        margin-bottom: 10px;
+        color: red
+    }
+}
+
+.fix {
+    background-color: #B7C5B7 !important;
+}
+
+.dnone {
+    display: none;
 }

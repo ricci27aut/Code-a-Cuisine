@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { N8nApi } from '../../shared/n8n-api';
 
 @Component({
   selector: 'app-preferences',
@@ -8,10 +9,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './preferences.scss',
 })
 export class Preferences {
+  ingredients = inject(N8nApi).recipeRequest;
   countries = ['German', 'Italie', 'India', 'Japanese', 'Fusion'];
   preferencs = ['Vegetarien', 'Vegan', 'Keto', 'No preferences']
   persons: number = 1;
   portions: number = 1;
+
+  time: string = '';
+  cuisine: string = '';
+  diet: string = '';
+
+  checked:boolean = false;
 
   countUp(list: 'persons' | 'portions'): void {
     if (this[list] >= 8) {
@@ -26,4 +34,26 @@ export class Preferences {
     }
     this[list] -= 1;
   }
+
+  setCuisine(cuisine: string):void {
+    this.cuisine = cuisine;
+  }
+
+   setTime(time: string):void {
+    this.time = time;
+  }
+   setDiet(diet: string):void {
+    this.diet = diet;
+  }
+
+  checkImput():void{
+    if(this.cuisine === '' || this.time === '' || this.diet === ''){
+      this.checked = true;
+      return
+  }
+    this.ingredients.update(arr => [...arr, { cuisine: this.cuisine, time: this.time, diet: this.diet, persons: this.persons, portions: this.portions }]);
+    this.checked = false;
+    console.log(this.ingredients());
+  }
+
 }
