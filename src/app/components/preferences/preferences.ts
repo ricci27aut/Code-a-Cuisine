@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './preferences.scss',
 })
 export class Preferences {
-  ingredients = inject(N8nApi).recipeRequest;
+  ingredients = inject(N8nApi);
   countries = ['German', 'Italie', 'India', 'Japanese', 'Fusion'];
   preferencs = ['Vegetarien', 'Vegan', 'Keto', 'No preferences']
   persons: number = 1;
@@ -52,9 +52,9 @@ export class Preferences {
       this.checked = true;
       return
   }
-    this.ingredients.update(arr => [...arr, { cuisine: this.cuisine, time: this.time, diet: this.diet, persons: this.persons, portions: this.portions }]);
+    this.ingredients.recipeRequest.update(arr => [...arr, { cuisine: this.cuisine, time: this.time, diet: this.diet, persons: this.persons, portions: this.portions }]);
     this.checked = false;
-    console.log(this.ingredients());
+    this.ingredients.sendRecipeRequest();
   }
 
 }
