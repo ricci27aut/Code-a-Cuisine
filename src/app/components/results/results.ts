@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { N8nApi } from '../../shared/n8n-api';
 
 @Component({
   selector: 'app-results',
@@ -8,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './results.scss',
 })
 export class Results {
-  dataLoaded: boolean = false;
+recipes = inject(N8nApi);
 }

@@ -1,15 +1,25 @@
 <main>
-    <section [class.dnone]="!dataLoaded">
-    <div>
-        <div><h1>The recipe results</h1>
+    <section [class.dnone]="!recipes.dataLoaded()">
+    <div class="title-container">
+        <div class="text-area">
+            <h1>The recipe results</h1>
             <span>We took what you have and let our AI do the thinking. Here are 3 easy recipes you can make right now!</span>
+            <div class="user-inf-container"><p class="user-inf">{{recipes.recipePreferences().diet}}</p> <p class="user-inf">{{recipes.recipePreferences().time}}</p></div>
         </div>
         <img src="assets/img/results/robot-arm.png">
     </div>
 
+    <div class="recipe-area">
+        <div class="recipe-container" *ngFor="let recipe of recipes.recipeResults()?.recipes ?? []; let i = index">
+            <h1><img src="assets/img/results/icon.png">Recipe {{ i + 1 }}</h1>
+            <h2>{{ recipe.name }}</h2>
+            <p><img src="assets/img/preferences/schedule.png">Cooking time: {{ recipe.cookingTime }} min</p>
+            <button>View</button>
+        </div>
+    </div>
     </section>
 
-   <article class="loading-animation" [class.dnone]="dataLoaded">
+   <article class="loading-animation" [class.dnone]="recipes.dataLoaded()">
     <div>
     <img src="assets/img/loading-animation/laoding.gif">
     </div>

@@ -10,7 +10,7 @@ import { N8nApi } from '../../shared/n8n-api';
   styleUrl: './genrate-recipe.scss',
 })
 export class GenrateRecipe {
-  ingredients = inject(N8nApi).recipeRequest;
+  ingredients = inject(N8nApi).recipeIngredients;
 
   @ViewChild('ingred')
   ingred!: ElementRef<HTMLInputElement>;
@@ -24,7 +24,7 @@ export class GenrateRecipe {
     const ingred = this.ingred?.nativeElement?.value ?? '';
     const quantity = this.quantity?.nativeElement?.value || 100;;
 
-    this.ingredients.update(arr => [...arr, { quantity, ingred }]);
+    this.ingredients.update(arr => [...arr, { 'quantity': quantity, 'name': ingred }]);
 
     this.clearInput()
     this.showBtn()
