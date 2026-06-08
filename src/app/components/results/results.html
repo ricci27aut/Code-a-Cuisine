@@ -17,6 +17,13 @@
             <button>View</button>
         </div>
     </div>
+
+    <div class="btn-area">
+        <div>
+        <button (click)="recipes.sendRecipeRequest()">Generate new recipe</button>
+        <img src="assets/img/results/arrow-right-withe.png">
+        </div>
+    </div>
     </section>
 
    <article class="loading-animation" [class.dnone]="recipes.dataLoaded()">

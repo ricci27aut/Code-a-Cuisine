@@ -9,7 +9,7 @@ export class N8nApi {
   recipeIngredients = signal<any[]>([]);
 recipePreferences = signal<any>({});
 recipeResults = signal<any>([]);
-dataLoaded = signal(false);
+dataLoaded = signal(true);
 
 sendRecipeRequest() {
   const url = 'http://localhost:5678/webhook-test/recipe';

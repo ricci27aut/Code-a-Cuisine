@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './recipe-ditail.html',
   styleUrl: './recipe-ditail.scss',
 })
-export class RecipeDitail {}
+export class RecipeDitail {
+  liked = 'assets/img/view/favorite.png'
+}

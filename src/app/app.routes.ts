@@ -3,6 +3,7 @@ import { StartScreen } from '../app/components/start-screen/start-screen';
 import { GenrateRecipe } from '../app/components/genrate-recipe/genrate-recipe';
 import { Preferences} from '../app/components/preferences/preferences'
 import { Results } from '../app/components/results/results';
+import { RecipeDitail } from '../app/components/recipe-ditail/recipe-ditail'
 
 export const routes: Routes = [
     {
@@ -20,5 +21,9 @@ export const routes: Routes = [
     {
         path: "Results",
         component: Results
+    },
+    {
+        path: "View",
+        component: RecipeDitail
     }
 ];
