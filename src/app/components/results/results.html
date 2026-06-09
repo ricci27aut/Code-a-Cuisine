@@ -14,7 +14,7 @@
             <h1><img src="assets/img/results/icon.png">Recipe {{ i + 1 }}</h1>
             <h2>{{ recipe.name }}</h2>
             <p><img src="assets/img/preferences/schedule.png">Cooking time: {{ recipe.cookingTime }} min</p>
-            <button>View</button>
+            <button (click)="loadView()">View</button>
         </div>
     </div>
 

@@ -1,0 +1,128 @@
+@use '../../../styles.scss' as *;
+
+main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: $font-green;
+    font-family: 'Quicksand';
+}
+
+header {
+    max-width: 1440px;
+    width: 75%;
+    padding-top: 30px;
+
+    p {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+}
+
+section {
+    max-width: 1440px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+article {
+    @include flex-center;
+}
+
+.cuisine-box {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 190px;
+    row-gap: 20px;
+    cursor: pointer;
+    width: 100%;
+
+    div {
+        width: 100%;
+    }
+
+    h3 {
+        font-size: 28px;
+        @include flex-start;
+        gap: 10px;
+        padding-bottom: 5px;
+    }
+
+    .foot-img {
+        width: 400px;
+    }
+
+    .icon {
+        width: 28px;
+    }
+}
+
+.most-Liked-recipes {
+    width: 100%;
+    background-color: #F7F9F7;
+    border-radius: 16px;
+    padding: 30px;
+    margin: 50px 0;
+    @include flex-start;
+
+    .text-area {
+        width: 30%;
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 64px;
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 24px;
+    }
+}
+
+.most-Liked-container{
+    display: flex;
+    align-items: center !important;
+    justify-content: center!important;
+    height: min-content;
+  h2 {
+        font-weight: 600;
+        font-size: 24px;
+        img{
+            width: 24px;
+        }
+    }
+}
+
+
+.btn-area {
+    max-width: 1440px;
+    width: 100%;
+    margin: 50px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    div {
+        padding: 5px;
+
+        button {
+            color: $font-green;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        &:hover {
+            background-color: #F7F9F7;
+        }
+    }
+
+}

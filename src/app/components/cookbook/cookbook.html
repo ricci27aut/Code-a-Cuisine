@@ -1,0 +1,33 @@
+<main>
+<section>
+    <header><img src="assets/img/logo-green.png">
+        <p routerLink='/'><img src="assets/img/arrow-left.png">Back</p>
+    </header>
+
+    <article class="most-Liked-recipes">
+        <div class="text-area">
+            <h1>Cookbook</h1>
+            <span>From quick bites to gourmet delights, explore them all in our ultimate cookbook and get inspired for
+                your
+                next culinary adventure.
+            </span>
+        </div>
+
+        <div class="most-Liked-container">
+            <h2>Most liked recipes <img src="assets/img/view/favorite.png"></h2>
+        </div>
+    </article>
+    <article class="cuisine-box">
+        <div *ngFor="let item of imageNames ; let i = index">
+            <h3>{{item}} cuisine<img class="icon" src="assets/img/cookbook/icons/{{item}}.png"></h3>
+            <img class="foot-img" src="assets/img/cookbook/{{item}}.png">
+        </div>
+    </article>
+    <div class="btn-area">
+        <div>
+            <button>Generate new recipe</button>
+            <img src="assets/img/results/arrow-right-withe.png">
+        </div>
+    </div>
+    </section>
+</main>

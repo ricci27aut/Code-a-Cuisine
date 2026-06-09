@@ -4,6 +4,7 @@ import { GenrateRecipe } from '../app/components/genrate-recipe/genrate-recipe';
 import { Preferences} from '../app/components/preferences/preferences'
 import { Results } from '../app/components/results/results';
 import { RecipeDitail } from '../app/components/recipe-ditail/recipe-ditail'
+import { Cookbook } from '../app/components/cookbook/cookbook'
 
 export const routes: Routes = [
     {
@@ -25,5 +26,9 @@ export const routes: Routes = [
     {
         path: "View",
         component: RecipeDitail
+    },
+    {
+        path: "Cook-Book",
+        component: Cookbook
     }
 ];
