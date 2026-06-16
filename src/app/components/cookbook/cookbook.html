@@ -20,7 +20,7 @@
     <article class="cuisine-box">
         <div *ngFor="let item of imageNames ; let i = index">
             <h3>{{item}} cuisine<img class="icon" src="assets/img/cookbook/icons/{{item}}.png"></h3>
-            <img class="foot-img" src="assets/img/cookbook/{{item}}.png">
+            <img class="foot-img" (click)="loadCuisineRecipes(item)" src="assets/img/cookbook/{{item}}.png">
         </div>
     </article>
     <div class="btn-area">

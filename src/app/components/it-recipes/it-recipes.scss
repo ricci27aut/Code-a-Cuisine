@@ -1,0 +1,118 @@
+@use '../../../styles.scss' as *;
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: $font-green;
+    font-family: 'Quicksand';
+}
+
+section {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+
+    h1 {
+        @include flex-center;
+        background-image: url('../../../../public/assets/img/cookbook/cuisine.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 150px;
+        width: 100%;
+        color: black;
+        margin-bottom: 50px;
+    }
+}
+
+.recipes-container {
+    padding: 8px;
+    @include flex-center;
+    gap: 250px;
+
+    .recipe-titel {
+        display: flex;
+        flex-direction: column;
+    }
+
+    h2 {
+        display: flex;
+        font-size: 24px;
+    }
+
+    .list-num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background-color: $font-color-white;
+        @include flex-center;
+        justify-content: center;
+        font-size: 18px;
+        margin: 0;
+    }
+
+    h3 {
+        margin-left: 30px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 16px;
+        font-weight: 500;
+
+        img {
+            width: 16px;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: $interactive-bg-hover;
+        border-radius: 16px;
+    }
+}
+
+.details {
+    display: flex;
+    gap: 7px;
+
+    div {
+        @include flex-center;
+        padding: 3px 7px;
+        background-color: $container-green;
+        border-radius: 16px;
+    }
+}
+
+.flex-center {
+    @include flex-center;
+    gap: 5px;
+}
+
+footer {
+    margin-top: 50px;
+    width: 100%;
+    @include flex-center;
+    gap: 20px;
+
+    b {
+        color: black;
+        font-family: 'Quicksand';
+          &:hover {
+            cursor: default;
+        }
+    }
+
+    p {
+        padding: 3px 3px;
+        color: black;
+        font-family: 'Quicksand';
+
+        &:hover {
+            background-color: $container-green;
+            cursor: pointer;
+        }
+    }
+
+}

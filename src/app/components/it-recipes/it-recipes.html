@@ -1,0 +1,34 @@
+<main>
+    <section>
+        <h1>Italian cuisine</h1>
+
+        <div class="recipes-container" *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">
+            <div class="recipe-titel">
+                <h3>
+                    <img src="assets/img/preferences/schedule.png">
+                    Cooking time: {{item.cookingTime}}
+                </h3>
+                <div class="flex-center">
+                    <p class="list-num">{{i + 1}}.</p>
+                    <h2>{{item.name}}</h2>
+                </div>
+            </div>
+
+            <div class="details">
+                <div>Vegetarien</div>
+                <div>Quick</div>
+                <div><img src="assets/img/view/favorite.png"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p (click)="changePage(0)">&lt;</p>
+        <p (click)="changePage(pagination)">{{ pagination }}</p>
+        <p (click)="changePage(pagination + 1)">{{ pagination + 1 }}</p>
+        <p (click)="changePage(pagination + 2)">{{ pagination + 2 }}</p>
+        <b>...</b>
+        <p >{{ Pager}}</p>
+        <p (click)="changePage(pagination + 1)">&gt;</p>
+    </footer>
+</main>

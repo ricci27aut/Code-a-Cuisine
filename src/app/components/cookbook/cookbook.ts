@@ -1,11 +1,11 @@
-import { Component, } from '@angular/core';
-import { RouterLink } from '@angular/router'
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router'
 import { CommonModule } from '@angular/common';
 import { FierbaseCookbook } from '../../shared/fierbase-cookbook'
 
 @Component({
   selector: 'app-cookbook',
-  imports: [RouterLink, CommonModule, FierbaseCookbook],
+  imports: [RouterLink, CommonModule],
   templateUrl: './cookbook.html',
   styleUrl: './cookbook.scss',
 })
@@ -14,19 +14,10 @@ export class Cookbook {
     'Italian', 'German', 'Japanese', 'Gourmet', 'Indian', 'Fusion'
   ];
 
-  constructor(private recipeFirebaseService: RecipeFirebaseService) { }
+  router = inject(Router);
+  recipes =  inject(FierbaseCookbook)
 
-  recipes = this.recipeFirebaseService.recipes;
-
-  loadItalianRecipes() {
-    this.recipeFirebaseService.loadRecipesByCategory('Italian');
-  }
-
-  loadGermanRecipes() {
-    this.recipeFirebaseService.loadRecipesByCategory('German');
-  }
-
-  loadJapaneseRecipes() {
-    this.recipeFirebaseService.loadRecipesByCategory('Japanese');
+  async loadCuisineRecipes(cuisine:string) {
+    await this.router.navigate(['/ITRecipes', cuisine]);
   }
 }

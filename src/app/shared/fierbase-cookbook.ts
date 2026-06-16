@@ -12,8 +12,9 @@ export class FierbaseCookbook {
   constructor(private http: HttpClient) { }
 
   getRecipesByCategory(category: string) {
-    return this.http
-      .get<any>(`${this.firebaseUrl}/recipes.json?orderBy="category"&equalTo="${category}"`);
+    return this.http.get<any>(
+  `${this.firebaseUrl}/recipes.json?orderBy="category"&equalTo="${category}"`
+);
   }
 
   loadRecipesByCategory(category: string) {
@@ -26,6 +27,8 @@ export class FierbaseCookbook {
         : [];
 
       this.recipes.set(recipesArray);
+      console.log(this.recipes());
+      
     });
   }
 }
