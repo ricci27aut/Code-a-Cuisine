@@ -2,10 +2,14 @@
     <section>
         <article class="heat-line-container">
             <div class="titel-area">
-                <p class="flex-center"><img src="assets/img/preferences/schedule.png">Coocking time: 20min</p>
-                <h1>Gericht</h1>
-                <p>Coocking person: 2 <span><img class=".chef-img" src="assets/img/view/chef-1.png"></span> <span>
-                        <img class=".chef-img" src="assets/img/view/chef-2.png"></span></p>
+                <p class="flex-center"><img src="assets/img/preferences/schedule.png">Coocking time:
+                    {{service.recipeDitail()[0]?.cookingTime
+                    }}min</p>
+                <h1>{{service.recipeDitail()[0]?.name}}</h1>
+                <p>Coocking person: {{service.recipeDitail()[0]?.cooks}} <span><img class=".chef-img"
+                            src="assets/img/view/chef-1.png"></span> <span>
+                        <img *ngIf="service.recipeDitail()[0]?.cooks === 2" class="chef-img"
+                            src="assets/img/view/chef-2.png"></span></p>
             </div>
             <div class="user-info-container">
                 <div class="likes-area">
@@ -18,10 +22,10 @@
                 <div class="user-info">
                     <h3>Nutritional information</h3>
                     <div>
-                        <p>Energie<i>58g</i></p>
-                        <p>Protein<i>58g</i></p>
-                        <p>Fat<i>58g</i></p>
-                        <p>Carbs<i>58g</i></p>
+                        <p>Energie<i></i>{{service.recipeDitail()[0]?.nutrition.perServing.calories}}</p>
+                        <p>Protein<i>{{service.recipeDitail()[0]?.nutrition.perServing.protein}}</i></p>
+                        <p>Fat<i>{{service.recipeDitail()[0]?.nutrition.perServing.fat}}</i></p>
+                        <p>Carbs<i>{{service.recipeDitail()[0]?.nutrition.perServing.carbohydrates}}</i></p>
                     </div>
                 </div>
             </div>
@@ -31,17 +35,33 @@
             <div class="content-divider bg-Ingredients">
                 <h2>Ingredients</h2>
             </div>
-            <div></div>
-            <div></div>
+            <div class="ingredients-area">
+            <div>
+                <h4>Your ingredients</h4>
+                <p *ngFor="let item of service.recipeDitail()[0]?.ingredients; let i = index">
+                    <li>{{item.amount}}{{item.name}}</li></p>
+            </div>
+            <div>
+                <h4>Extra ingredients</h4>
+                <p *ngFor="let item of service.recipeDitail()[0]?.missingIngredients; let i = index"><li>{{item.amount}}{{item.name}}</li></p>
+            </div>
+            </div>
         </article>
 
         <article>
             <div class="content-divider bg-Directions">
                 <h2>Directions</h2>
             </div>
-
-            <div></div>
-            <div></div>
+            <div class="steps-area">
+                <div *ngFor="let item of service.recipeDitail()[0]?.steps; let i = index" class="steps-container">
+                    <h4>
+                        <p>{{i + 1}}</p>{{item.title}}
+                    </h4>
+                    <p>{{item.description}}</p>
+                </div>
+            </div>
         </article>
+        <h5>Just finished this meal?<p>Give it a heart, so that the others know this is delicious.</p>
+        </h5>
     </section>
 </main>

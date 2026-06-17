@@ -2,8 +2,9 @@
     <section>
         <h1>Italian cuisine</h1>
 
-        <div class="recipes-container" *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">
-            <div class="recipe-titel">
+        <div class="recipes-container"
+            *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">
+            <div class="recipe-titel" [routerLink]="['/View',item.category ,item.name]">
                 <h3>
                     <img src="assets/img/preferences/schedule.png">
                     Cooking time: {{item.cookingTime}}
@@ -23,12 +24,16 @@
     </section>
 
     <footer>
-        <p (click)="changePage(0)">&lt;</p>
+        <p (click)="changePage(pagination - 1)">&lt;</p>
         <p (click)="changePage(pagination)">{{ pagination }}</p>
-        <p (click)="changePage(pagination + 1)">{{ pagination + 1 }}</p>
-        <p (click)="changePage(pagination + 2)">{{ pagination + 2 }}</p>
-        <b>...</b>
-        <p >{{ Pager}}</p>
+        <p *ngIf="pagination + 1 <= pages" (click)="changePage(pagination + 1)">
+            {{ pagination + 1 }}
+        </p>
+        <p *ngIf="pagination + 2 <= pages" (click)="changePage(pagination + 2)">
+            {{ pagination + 2 }}
+        </p>
+        <b *ngIf="pagination + 7 <= pages">...</b>
+        <p *ngIf="pagination + 7 <= pages">{{ pagination + 7 }}</p>
         <p (click)="changePage(pagination + 1)">&gt;</p>
     </footer>
 </main>

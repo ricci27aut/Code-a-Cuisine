@@ -25,6 +25,7 @@ section {
 
 article {
     @include flex-center;
+    flex-direction: column;
     width: 90%;
 }
 
@@ -163,7 +164,28 @@ article {
     }
 }
 
-.flex-center{
+.steps-area {
+display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 80%;
+  margin: 0 auto;
+
+
+    .steps-container {
+          width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.ingredients-area{
+    display: flex;
+    justify-content: space-between;
+    gap: 100px;
+}
+
+.flex-center {
     display: flex;
     align-items: center !important;
 }

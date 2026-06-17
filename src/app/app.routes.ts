@@ -25,7 +25,7 @@ export const routes: Routes = [
         component: Results
     },
     {
-        path: "View",
+        path: "View/:category/:name",
         component: RecipeDitail
     },
     {
