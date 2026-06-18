@@ -18,10 +18,13 @@
         </div>
     </article>
     <article class="cuisine-box">
-        <div *ngFor="let item of imageNames ; let i = index">
-            <h3>{{item}} cuisine<img class="icon" src="assets/img/cookbook/icons/{{item}}.png"></h3>
-            <img class="foot-img" (click)="loadCuisineRecipes(item)" src="assets/img/cookbook/{{item}}.png">
-        </div>
+       <div *ngFor="let item of imageNames ; let i = index" class="hover">
+    <h3>{{item}} cuisine<img class="icon" src="assets/img/cookbook/icons/{{item}}.png"></h3>
+
+    <div class="img-box">
+        <img class="foot-img" (click)="loadCuisineRecipes(item)" src="assets/img/cookbook/{{item}}.png">
+    </div>
+</div>
     </article>
     <div class="btn-area">
         <div>
@@ -29,5 +32,5 @@
             <img src="assets/img/results/arrow-right-withe.png">
         </div>
     </div>
-    </section>
+    </section>9
 </main>

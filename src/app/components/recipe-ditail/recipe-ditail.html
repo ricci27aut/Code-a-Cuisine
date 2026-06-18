@@ -1,4 +1,7 @@
 <main>
+    <header><img src="assets/img/logo-green.png">
+        <p routerLink='/genrate-recipe'><img src="assets/img/arrow-left.png">Recipe generator</p>
+    </header>
     <section>
         <article class="heat-line-container">
             <div class="titel-area">
@@ -14,9 +17,9 @@
             <div class="user-info-container">
                 <div class="likes-area">
                     <div class="like-p-style">
-                        <p>Vegetarisch</p>
-                        <p>Qick</p>
-                        <p class="flex-center"><img [src]=liked>66</p>
+                        <p>{{service.recipeDitail()[0]?.preference}}</p>
+                        <p>{{timeCategory}}</p>
+                        <p class="flex-center"><img [src]=liked>{{service.recipeDitail()[0]?.likes}}</p>
                     </div>
                 </div>
                 <div class="user-info">
@@ -36,15 +39,20 @@
                 <h2>Ingredients</h2>
             </div>
             <div class="ingredients-area">
-            <div>
-                <h4>Your ingredients</h4>
-                <p *ngFor="let item of service.recipeDitail()[0]?.ingredients; let i = index">
-                    <li>{{item.amount}}{{item.name}}</li></p>
-            </div>
-            <div>
-                <h4>Extra ingredients</h4>
-                <p *ngFor="let item of service.recipeDitail()[0]?.missingIngredients; let i = index"><li>{{item.amount}}{{item.name}}</li></p>
-            </div>
+                <div class="ingredients-text">
+                    <h4>Your ingredients</h4>
+
+                    <p *ngFor="let item of service.recipeDitail()[0]?.ingredients; let i = index">
+                        <li>{{item.amount}}</li>{{item.name}}
+                    </p>
+
+                </div>
+                <div class="ingredients-text">
+                    <h4>Extra ingredients</h4>
+                    <p *ngFor="let item of service.recipeDitail()[0]?.missingIngredients; let i = index">
+                        <li>{{item.amount}}</li>{{item.name}}
+                    </p>
+                </div>
             </div>
         </article>
 
@@ -54,14 +62,21 @@
             </div>
             <div class="steps-area">
                 <div *ngFor="let item of service.recipeDitail()[0]?.steps; let i = index" class="steps-container">
+                    <div class="flex-space">
                     <h4>
-                        <p>{{i + 1}}</p>{{item.title}}
+                        <p>{{i + 1}}.</p>{{item.title}}
                     </h4>
-                    <p>{{item.description}}</p>
+                    <img [src]="
+                        service.recipeDitail()[0]?.cooks === 2
+                        ? 'assets/img/view/chef-' + (i % 2 === 0 ? 1 : 2) + '.png'
+                        : 'assets/img/view/chef-1.png'">
+                    </div>
+                    <p class="steps-text">{{item.description}}</p>
                 </div>
             </div>
         </article>
-        <h5>Just finished this meal?<p>Give it a heart, so that the others know this is delicious.</p>
-        </h5>
+        <div class="like-area"> <h5 >Just finished this meal?</h5><p>Give it a heart, so that the others know this is delicious.</p><img src="assets/img/view/Heart.png"></div>
     </section>
+
+    <footer><h3>Find inspiration for your next culinary adventure!</h3><button routerLink='/Cook-Book'>Cookbook</button></footer>
 </main>
