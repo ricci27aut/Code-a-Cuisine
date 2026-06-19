@@ -1,0 +1,6 @@
+<article class="drop-down-container">
+<div (click)="toggleDropdown()" class="drop-down-style">{{selectedUnit}}<img [src]="path"></div>
+<div class="drop-down-options" *ngIf="active">
+  <p (click)="selectUnit(unit)" *ngFor="let unit of units">{{unit}}</p>
+</div>
+</article>

@@ -83,12 +83,22 @@ main {
     }
 }
 
+.start-header{
+    position: absolute;
+    top: 30px;
+    left: 55px;
+
+    img {
+        width: 150px;
+    }
+}
+
 .btn-cookboock-container {
     display: flex;
     gap: 30px;
     position: absolute;
-    bottom: 60px;
-
+    top: min(calc(100vh - 100px), 900px);
+    
     h3 {
         font-size: clamp(24px, 7vw, 32px);
         font-weight: 500;

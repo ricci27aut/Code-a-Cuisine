@@ -1,0 +1,39 @@
+@use '../../../styles.scss' as *;
+
+article{
+@include flex-center;
+flex-direction: column;
+font-family: 'Quicksand', sans-serif;
+font-weight: 500;
+font-size: 16px;
+color: #10310B;
+}
+
+.drop-down-style{
+background-color: $input;
+width: 70px;
+border-radius: 16px;
+@include flex-center;
+gap: 5px;
+padding: 2px;
+}
+
+.drop-down-options{
+margin-top: 5px;
+gap: 5px;
+cursor: pointer;
+
+p{
+    @include flex-start;
+     padding: 1px 3px;
+&:hover{
+    background-color: $input;
+    border-radius: 16px;
+}
+}
+
+}
+
+img{
+    width: 10px;
+}

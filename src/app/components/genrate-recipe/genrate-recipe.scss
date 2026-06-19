@@ -5,7 +5,8 @@ main {
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding: 50px;
+    font-family: 'Quicksand';
+    color: #10310B;
 }
 
 section {
@@ -20,11 +21,10 @@ section {
         display: flex;
         align-items: start;
         justify-content: center;
-        gap: 20px;
 
 
         .ingredient-container {
-            width: 60%;
+            width: 55%;
             display: flex;
             align-items: start;
             justify-content: center;
@@ -33,7 +33,6 @@ section {
         }
 
         .add-container {
-            width: 30%;
             display: flex;
             align-items: start;
             justify-content: center;
@@ -52,8 +51,11 @@ section {
             }
 
             input {
+                padding: 1px 3px;
                 width: 30px;
                 text-align: center;
+                font-weight: 500;
+                font-size: 16px;
             }
         }
     }
@@ -91,15 +93,25 @@ section {
     background-color: $container-green;
     border-radius: 16px;
     min-width: 400px;
-    min-height: 120px;
-    padding: 8px;
+    min-height: 150px;
+    padding: 8px 8px;
 }
 
 input{
     background-color: $input;
     border-radius: 16px;
     border-color: transparent;
+     cursor: pointer;
+    font-family: 'Quicksand';
+    font-size: 16px;
     
+}
+
+.suggestion-item{
+    margin: 5px 0;
+    cursor: pointer;
+    font-family: 'Quicksand';
+    font-size: 16px;
 }
 
 .text{

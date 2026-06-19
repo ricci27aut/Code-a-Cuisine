@@ -1,11 +1,13 @@
-import { Component, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { N8nApi } from '../../shared/n8n-api';
+import { HttpClient } from '@angular/common/http';
+import { DropDown } from '../drop-down/drop-down';
 
 @Component({
   selector: 'app-genrate-recipe',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DropDown],
   templateUrl: './genrate-recipe.html',
   styleUrl: './genrate-recipe.scss',
 })
@@ -17,14 +19,25 @@ export class GenrateRecipe {
   @ViewChild('quantity')
   quantity!: ElementRef<HTMLInputElement>;
 
+  appId = '8c17b6e0';
+  appKey = 'c545e239398655ec212848edb542ce1b'
   showNectBtn = false;
+  ingredientInput: string = '';
+  suggestions: string[] = [];
+  ingriedents = signal<any[]>([]);
+  selectUnit: string = 'gram';
 
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+     this.getIngredientSuggestions();
+  }
 
   addIngredient(): void {
     const ingred = this.ingred?.nativeElement?.value ?? '';
     const quantity = this.quantity?.nativeElement?.value || 100;;
 
-    this.ingredients.update(arr => [...arr, { 'quantity': quantity, 'name': ingred }]);
+    this.ingredients.update(arr => [...arr, { 'quantity': quantity + ' ' + this.selectUnit, 'name': ingred }]);
 
     this.clearInput()
     this.showBtn()
@@ -49,4 +62,31 @@ export class GenrateRecipe {
       this.showNectBtn = false;
     }
   }
+
+  getIngredientSuggestions() {
+  this.http.get<any>(
+  'https://www.themealdb.com/api/json/v1/1/list.php?i=list'
+)
+.subscribe(res => {
+  this.suggestions = res.meals.map(
+    (x: any) => x.strIngredient
+  );
+  console.log(this.suggestions);
+});
+}
+
+getRightIngredient(input: string) {
+
+ const result = this.suggestions.filter(item =>
+  item.toLowerCase().includes(input.toLowerCase())
+).slice(0, 3);
+
+this.ingriedents.set(result);
+}
+
+addToInput(item: string) {
+  this.ingred.nativeElement.value = item;
+  this.ingriedents.set([]);
+}
+
 }

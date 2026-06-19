@@ -1,4 +1,6 @@
 <main>
+    <header><img src="assets/img/logo-green.png">
+    </header>
     <div  class="title-container">
         <h1>Generate recipe</h1>
         <h2>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</h2>
@@ -9,13 +11,17 @@
 
             <div class="ingredient-container">
             <h3 class="text">Ingredient</h3>
-            <input #ingred type="text">
+            <input #ingred type="text" (input)="getRightIngredient($event.target.value)">
+            <div>
+                <p class="suggestion-item" (click)="addToInput(item)" *ngFor="let item of ingriedents()">{{item}}</p>
             </div>
+        </div>
 
             <div class="add-container">
                 <h3 class="text">Serving size</h3>
                 <div>
                     <input #quantity type="number" class="no-spinner" placeholder="100" >
+                    <app-drop-down (unitSelected)="selectUnit = $event"></app-drop-down>
                     <img (click)="addIngredient()" src="assets/img/+.png">
                 </div>
             </div>
