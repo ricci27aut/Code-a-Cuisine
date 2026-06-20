@@ -48,8 +48,36 @@ export class FierbaseCookbook {
         }))
         : [];
       console.log(recipesArray);
-      this.recipeDitail .set(recipesArray);
+      this.recipeDitail.set(recipesArray);
     })
   }
 
+  likeRecipe(name: string) {
+    this.getRecipeByName(name).subscribe(data => {
+      const entry = Object.entries(data)[0] as any;
+      const id = entry[0];
+      const recipe = entry[1];
+
+      const newLikes = (recipe.likes || 0) + 1;
+
+      this.http.patch(`${this.firebaseUrl}/recipes/${id}.json`, {
+        likes: newLikes
+      }).subscribe();
+    });
+  }
+
+  unlikeRecipe(name: string) {
+    this.getRecipeByName(name).subscribe(data => {
+      const entry = Object.entries(data)[0] as any;
+      const id = entry[0];
+      const recipe = entry[1];
+
+      const newLikes = (recipe.likes || 0) - 1;
+
+      this.http.patch(`${this.firebaseUrl}/recipes/${id}.json`, {
+        likes: newLikes
+      }).subscribe();
+    });
+
+  }
 }

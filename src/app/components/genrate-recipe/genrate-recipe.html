@@ -1,7 +1,7 @@
 <main>
     <header><img src="assets/img/logo-green.png">
     </header>
-    <div  class="title-container">
+    <div class="title-container">
         <h1>Generate recipe</h1>
         <h2>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</h2>
     </div>
@@ -10,17 +10,18 @@
         <div class="input-content container-style">
 
             <div class="ingredient-container">
-            <h3 class="text">Ingredient</h3>
-            <input #ingred type="text" (input)="getRightIngredient($event.target.value)">
-            <div>
-                <p class="suggestion-item" (click)="addToInput(item)" *ngFor="let item of ingriedents()">{{item}}</p>
+                <h3 class="text">Ingredient</h3>
+                <input #ingred type="text" (input)="getRightIngredient($event.target.value)">
+                <div>
+                    <p class="suggestion-item" (click)="addToInput(item)" *ngFor="let item of ingriedents()">{{item}}
+                    </p>
+                </div>
             </div>
-        </div>
 
             <div class="add-container">
                 <h3 class="text">Serving size</h3>
                 <div>
-                    <input #quantity type="number" class="no-spinner" placeholder="100" >
+                    <input #quantity type="number" class="no-spinner" placeholder="100">
                     <app-drop-down (unitSelected)="selectUnit = $event"></app-drop-down>
                     <img (click)="addIngredient()" src="assets/img/+.png">
                 </div>
@@ -28,16 +29,27 @@
         </div>
 
         <div class="flex-end">
-        <div class="addlist container-style">
-            <h3 class="text">List of your Ingredients</h3>
-            <div *ngFor="let item of ingredients(), let i = index">
-                <div class="item-container">
-                <li>{{item.quantity}} {{item.name}}</li>
-                <img (click)="deletItem(i)" src="assets/img/delete.png">
+            <div class="addlist container-style">
+                <h3 class="text">List of your Ingredients</h3>
+                <div *ngFor="let item of ingredients(); let i = index">
+                    <div class="item-container">
+
+                        <li [class.dnone]="edit && i === editIndex">{{item.quantity}}{{item.unit}} {{item.name}}</li>
+                        <div class="edit-container" [class.dnone]="!edit || i !== editIndex">
+                            <li><input (input)="updateQuantity($event.target.value, i)" type="number" class="no-spinner" placeholder="{{item.quantity}}"></li>
+                            <app-drop-down (unitSelected)="updateUnit($event, i)" (unitSelected)="selectUnit = $event"></app-drop-down>{{item.name}}
+                        </div>
+
+                        <div class="img-container">
+                            <img (click)="editItem(i)" [src]="edit && i === editIndex 
+    ? 'assets/img/preferences/check.png' 
+    : 'assets/img/preferences/edit.png'">
+                            <img (click)="deletItem(i)" src="assets/img/delete.png">
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
-        <button [class.dnone]="!showNectBtn" routerLink="/Preferences" class="btn-primary" >next Step</button>
+            <button [class.dnone]="ingredients().length === 0" routerLink="/Preferences" class="btn-primary">next Step</button>
         </div>
     </section>
 </main>

@@ -19,7 +19,7 @@
                     <div class="like-p-style">
                         <p>{{service.recipeDitail()[0]?.preference}}</p>
                         <p>{{timeCategory}}</p>
-                        <p class="flex-center"><img [src]=liked>{{service.recipeDitail()[0]?.likes}}</p>
+                        <p class="flex-center"><img [src]=liked>{{service.recipeDitail()[0]?.likes + like}}</p>
                     </div>
                 </div>
                 <div class="user-info">
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </article>
-        <div class="like-area"> <h5 >Just finished this meal?</h5><p>Give it a heart, so that the others know this is delicious.</p><img src="assets/img/view/Heart.png"></div>
+        <div class="like-area"> <h5 >Just finished this meal?</h5><p>Give it a heart, so that the others know this is delicious.</p><img (click)="likeTheRecipe()" [src]="path"></div>
     </section>
 
     <footer><h3>Find inspiration for your next culinary adventure!</h3><button routerLink='/Cook-Book'>Cookbook</button></footer>
