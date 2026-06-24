@@ -10,11 +10,18 @@ main {
     font-family: 'Quicksand';
 }
 
+header{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+}
+
 section {
-    max-width: 1440px;
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
+    @include flex-center;
+    flex-direction: column;
 }
 
 article {
@@ -24,7 +31,7 @@ article {
 .cuisine-box {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 190px;
+    column-gap: 110px;
     row-gap: 20px;
     cursor: pointer;
     width: 100%;
@@ -41,8 +48,8 @@ article {
     }
 
     .foot-img {
-        width: 400px;
-          
+        width: clamp(300px, 15vw, 400px);
+
     }
 
     .icon {
@@ -52,44 +59,50 @@ article {
 
 .most-Liked-recipes {
     width: 100%;
+    min-height: 200px;
     background-color: #F7F9F7;
     border-radius: 16px;
+    box-sizing: border-box;
     padding: 30px;
-    margin: 50px 0;
+    margin: 50px auto;
     @include flex-start;
+    gap: 40px;
 
     .text-area {
-        width: 30%;
+        width: 55%;
     }
 
     h1 {
         font-weight: 700;
-        font-size: 64px;
+        font-size: clamp(40px, 7vw, 64px);
     }
 
     span {
         font-weight: 500;
-        font-size: 24px;
+        font-size: clamp(18px, 3vw, 32px);
     }
 }
 
-.most-Liked-container{
+.most-Liked-container {
+    width: 50%;
+    height: 100%;
     display: flex;
-    align-items: center !important;
-    justify-content: center!important;
-    height: min-content;
-  h2 {
+    align-items: start !important;
+    justify-content: end !important;
+    flex-direction: column;
+    gap: 10px;
+
+    h2 {
         font-weight: 600;
         font-size: 24px;
-        img{
+
+        img {
             width: 24px;
         }
     }
 }
 
-
 .btn-area {
-    max-width: 1440px;
     width: 100%;
     margin: 50px 0;
     display: flex;
@@ -115,14 +128,12 @@ article {
 }
 
 .hover {
-    
-
     img {
         transition: transform 300ms ease-in-out;
     }
 
     .img-box {
-        width: 400px;
+        width: (300px, 15vw, 400px);
         height: 400px;
         overflow: hidden;
     }
@@ -143,4 +154,68 @@ article {
             transform: scale(1.1);
         }
     }
+}
+
+.over-flow {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    cursor: grabbing;
+}
+
+@media (max-width: 1554px) {
+    .cuisine-box {
+        column-gap: clamp(10px, 5vw, 115px);
+    }
+}
+
+@media (max-width: 1310px) {
+    .cuisine-box {
+        grid-template-columns: repeat(2, minmax(280px, 400px));
+        justify-content: center;
+        column-gap: 40px;
+    }
+}
+
+@media (max-width: 850px) {
+    .cuisine-box {
+        @include flex-center;
+        flex-direction: column;
+
+        div {
+            flex-direction: column;
+            @include flex-center;
+        }
+
+    }
+
+    .most-Liked-recipes {
+        width: 100%;
+        @include flex-start;
+        flex-direction: column;
+        gap: 20px;
+
+        .text-area {
+            width: 100%;
+        }
+    }
+
+    .most-Liked-container {
+        width: 100%;
+        display: flex;
+        align-items: start !important;
+        justify-content: end !important;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-position-mobile {
+        left: 8px !important;
+    }
+}
+
+@media (max-width: 422px){
+.most-Liked-recipes{
+    padding: 8px;
+}
 }

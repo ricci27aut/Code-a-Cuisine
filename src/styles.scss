@@ -117,7 +117,6 @@ $font-color-white: #FAF0E6;
   font-style: normal;
 }
 
-
 * {
   margin: 0;
   padding: 0;
@@ -146,9 +145,11 @@ h2 {
 }
 
 header {
-    max-width: 1440px;
-    width: 75%;
     padding-top: 30px;
+
+    .logo{
+      width: 142px;
+    }
 
     p {
         margin-top: 30px;

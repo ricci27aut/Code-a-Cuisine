@@ -80,4 +80,8 @@ export class FierbaseCookbook {
     });
 
   }
+
+  getTopRecipes() {
+  return this.http.get<any>(`${this.firebaseUrl}/recipes.json`);
+}
 }

@@ -5,19 +5,22 @@ main {
     height: 100vh;
     background-color: $bg-green;
     @include flex-main;
+    overflow: hidden;
 
     .meal-container {
         @include flex-main;
         flex-direction: column;
         position: relative;
+        z-index: 1;
         top: 0;
-        overflow: hidden;
+        right: 0;
         height: 100vh;
         width: 480px;
+    
 
         img {
-            width: clamp(295px, 40vw, 470px);
-            height: clamp(295px, 40vw, 450px);
+            width:  470px;
+            height: 450px;
         }
 
         .meal-3 {
@@ -42,6 +45,7 @@ main {
         height: 100vh;
         position: relative;
         top: 0;
+        z-index: 10;
 
         display: flex;
         justify-content: center;
@@ -54,7 +58,7 @@ main {
             top: 200px;
 
             h2 {
-                font-size: clamp(24px, 7vw, 48px);
+                font-size: clamp(24px, 3vw, 48px);
                 font-weight: 600;
                 font-family: 'Quicksand';
             }
@@ -100,22 +104,53 @@ main {
     top: min(calc(100vh - 100px), 900px);
     
     h3 {
-        font-size: clamp(24px, 7vw, 32px);
+        font-size: clamp(24px, 4vw, 32px);
         font-weight: 500;
         font-family: 'Ubuntu';
     }
 
     button {
+        min-width: 200px;
         color: white;
         font-family: 'Quicksand';
-        @include flex-center;
+        display: flex;
+        align-items: center;
+        justify-content: start;
         gap: 15px;
-        font-size: 20px;
+        font-size: clamp(14px, 4vw, 20px);
         font-weight: 500;
         padding: 5px;
 
         &:hover{
             background-color: #faf0e654;
         }
+    }
+}
+
+@media (max-width: 1120px) {
+   .meal-container {
+        transform: translateX(clamp(80px, 18vw, 220px));
+    }
+
+
+    .btn-cookboock-container{
+        justify-content: start;
+        align-items: start;
+         gap: 0px;
+         row-gap: 10px;
+        flex-direction: column;
+        top: min(calc(100vh - 100px), 870px);
+    }
+
+
+}
+
+@media (max-width: 600px) {
+    .text-conatiner{
+    padding-left:8px !important;
+    }
+
+    .header-position-mobile{  
+    left: 8px !important;
     }
 }

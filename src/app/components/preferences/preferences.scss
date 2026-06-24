@@ -8,6 +8,13 @@ main {
     color: $font-green;
 }
 
+header{
+    width:100%;
+    padding: 50px 0 0 50px;
+    display: flex;
+    flex-direction: column;
+}
+
 h1 {
     font-size: 28px;
     font-weight: 600;
