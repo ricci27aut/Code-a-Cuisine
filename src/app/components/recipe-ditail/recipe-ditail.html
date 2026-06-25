@@ -2,14 +2,14 @@
     <header><img src="assets/img/logo-green.png">
         <p routerLink='/genrate-recipe'><img src="assets/img/arrow-left.png">Recipe generator</p>
     </header>
-    <section>
+    <section class="max-width">
         <article class="heat-line-container">
             <div class="titel-area">
                 <p class="flex-center"><img src="assets/img/preferences/schedule.png">Coocking time:
                     {{service.recipeDitail()[0]?.cookingTime
                     }}min</p>
                 <h1>{{service.recipeDitail()[0]?.name}}</h1>
-                <p>Coocking person: {{service.recipeDitail()[0]?.cooks}} <span><img class=".chef-img"
+                <p class="styling-p">Coocking person: {{service.recipeDitail()[0]?.cooks}} <span><img class=".chef-img"
                             src="assets/img/view/chef-1.png"></span> <span>
                         <img *ngIf="service.recipeDitail()[0]?.cooks === 2" class="chef-img"
                             src="assets/img/view/chef-2.png"></span></p>
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </article>
-        <div class="like-area"> <h5 >Just finished this meal?</h5><p>Give it a heart, so that the others know this is delicious.</p><img (click)="likeTheRecipe()" [src]="path"></div>
+        <div class="like-area"> <h5 >Just finished this meal?</h5><div><p>Give it a heart, so that the others know this is delicious.</p><img (click)="likeTheRecipe()" [src]="path"></div></div>
     </section>
 
     <footer><h3>Find inspiration for your next culinary adventure!</h3><button routerLink='/Cook-Book'>Cookbook</button></footer>

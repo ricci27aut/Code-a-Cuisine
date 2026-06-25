@@ -1,12 +1,12 @@
 <main>
-    <section>
-        <header><img src="assets/img/logo-green.png">
+     <header><img src="assets/img/logo-green.png">
         <p routerLink='/Cook-Book'><img src="assets/img/arrow-left.png">Cookbook</p>
     </header>
-    <div class="btn-area"><button  routerLink='/genrate-recipe'>Generate a recipe</button></div>
-        <h1>Italian cuisine</h1>
-
-        <div class="recipes-container"
+    <section>
+    <div class="btn-area max-width"><button  routerLink='/genrate-recipe'>Generate a recipe</button></div>
+    <div class="title-container"><h1>Italian cuisine</h1></div>
+        
+        <div class="recipes-container max-width" [ngClass]="{'bg-mobile-items': i % 2 !== 0}"
             *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">
             <div class="recipe-titel" [routerLink]="['/View',item.category ,item.name]">
                 <h3>
@@ -28,6 +28,7 @@
     </section>
 
     <footer>
+        <div>
         <p (click)="changePage(pagination - 1)">&lt;</p>
         <p (click)="changePage(pagination)">{{ pagination }}</p>
         <p *ngIf="pagination + 1 <= pages" (click)="changePage(pagination + 1)">
@@ -39,5 +40,7 @@
         <b *ngIf="pagination + 7 <= pages">...</b>
         <p *ngIf="pagination + 7 <= pages">{{ pagination + 7 }}</p>
         <p (click)="changePage(pagination + 1)">&gt;</p>
+        </div>
+         <div class="btn-area-mobile"><button  routerLink='/genrate-recipe'>Generate a recipe</button></div>
     </footer>
 </main>
