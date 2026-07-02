@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GenrateRecipe } from './genrate-recipe';
+import { ErrorQuota } from './error-quota';
 
-describe('GenrateRecipe', () => {
-  let component: GenrateRecipe;
-  let fixture: ComponentFixture<GenrateRecipe>;
+describe('ErrorQuota', () => {
+  let component: ErrorQuota;
+  let fixture: ComponentFixture<ErrorQuota>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenrateRecipe],
+      imports: [ErrorQuota],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GenrateRecipe);
+    fixture = TestBed.createComponent(ErrorQuota);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

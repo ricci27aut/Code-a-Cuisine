@@ -3,7 +3,7 @@
         <p routerLink='/Cook-Book'><img src="assets/img/arrow-left.png">Cookbook</p>
     </header>
     <section>
-    <div class="btn-area max-width"><button  routerLink='/genrate-recipe'>Generate a recipe</button></div>
+    <div class="btn-area max-width"><button  routerLink='/generate-recipe'>Generate a recipe</button></div>
     <div class="title-container"><h1>Italian cuisine</h1></div>
         
         <div class="recipes-container max-width" [ngClass]="{'bg-mobile-items': i % 2 !== 0}"
@@ -41,6 +41,6 @@
         <p *ngIf="pagination + 7 <= pages">{{ pagination + 7 }}</p>
         <p (click)="changePage(pagination + 1)">&gt;</p>
         </div>
-         <div class="btn-area-mobile"><button  routerLink='/genrate-recipe'>Generate a recipe</button></div>
+         <div class="btn-area-mobile"><button  routerLink='/generate-recipe'>Generate a recipe</button></div>
     </footer>
 </main>

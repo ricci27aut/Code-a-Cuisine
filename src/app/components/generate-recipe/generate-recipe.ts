@@ -6,10 +6,10 @@ import { HttpClient } from '@angular/common/http';
 import { DropDown } from '../drop-down/drop-down';
 
 @Component({
-  selector: 'app-genrate-recipe',
+  selector: 'app-generate-recipe',
   imports: [CommonModule, RouterLink, DropDown],
-  templateUrl: './genrate-recipe.html',
-  styleUrl: './genrate-recipe.scss',
+  templateUrl: './generate-recipe.html',
+  styleUrl: './generate-recipe.scss',
 })
 export class GenrateRecipe {
   ingredients = inject(N8nApi).recipeIngredients;
@@ -31,7 +31,7 @@ export class GenrateRecipe {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getIngredientSuggestions();
+    this.getIngredientSuggestions() ;
   }
 
   addIngredient(): void {

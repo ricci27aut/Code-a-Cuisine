@@ -5,7 +5,7 @@ main {
     align-items: center;
     flex-direction: column;
     font-family: 'Quicksand', sans-serif;
-    color: $font-green;
+    color: #1E5515;
 }
 
 header{
@@ -13,6 +13,7 @@ header{
     padding: 50px 0 0 50px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -41,7 +42,7 @@ h1 {
     }
 
     h2 {
-        font-size: 20px;
+        font-size: clamp(18px, 2vw, 20px);
         font-weight: 500;
     }
 }
@@ -52,6 +53,9 @@ section {
     padding: 20px;
     margin-top: 50px;
     width: 40%;
+    max-width: 600px;
+    min-width: 600px;
+    box-sizing: border-box;  
 }
 
 .count-value {
@@ -85,8 +89,9 @@ h3 {
         background-color: $interactive-bg;
         width: fit-content;
         border-radius: 16px;
-        padding: 0px 5px 0px 5px;
+        padding: 0px 15px 0px 15px;
         cursor: pointer;
+        font-size: clamp(18px, 2vw, 20px);
 
         &:hover {
             background-color: $interactive-bg-hover;
@@ -99,6 +104,9 @@ h3 {
     @include flex-center;
     flex-direction: column;
     width: 40%;
+    max-width: 600px;
+    min-width: 600px;
+    box-sizing: border-box;  
 }
 
 .save-btn {
@@ -117,6 +125,7 @@ h3 {
     margin-top: 40px;
 
     p {
+        text-align: center;
         margin-bottom: 10px;
         color: red
     }
@@ -128,4 +137,37 @@ h3 {
 
 .dnone {
     display: none;
+}
+
+.time-container{
+    @include flex-center;
+    flex-direction: column;
+    gap: 5px;
+    span{
+        font-size: 14px;
+        color: $font-green;
+    }
+}
+
+@media(max-width: 640px) {
+    .possition-contnet,
+   .count-container{
+    flex-direction: column;
+    align-items: start;
+   }
+
+   section,
+    .possition-contnet {
+        width: calc(100% - 40px);
+        min-width: 0;
+    }
+
+    .chosse-container {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+   header{
+    padding: 50px 0 0 20px;
+   }
 }

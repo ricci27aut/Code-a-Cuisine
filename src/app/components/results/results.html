@@ -1,35 +1,50 @@
 <main>
+    <header>
+        <img src="assets/img/logo-white.png">
+    </header>
     <section [class.dnone]="!recipes.dataLoaded()">
-    <div class="title-container">
-        <div class="text-area">
-            <h1>The recipe results</h1>
-            <span>We took what you have and let our AI do the thinking. Here are 3 easy recipes you can make right now!</span>
-            <div class="user-inf-container"><p class="user-inf">{{recipes.recipePreferences().diet}}</p> <p class="user-inf">{{recipes.recipePreferences().time}}</p></div>
+        <div class="title-container">
+            <div class="text-area">
+                <h1>The recipe results</h1>
+                <img class="robot-arm" src="assets/img/results/robot-arm.png">
+                <span>We took what you have and let our AI do the thinking. Here are 3 easy recipes you can make right
+                    now!</span>
+                <div class="user-inf-container">
+                    <p class="user-inf">{{recipes.recipePreferences().diet}}</p>
+                    <p class="user-inf">{{recipes.recipePreferences().time}}</p>
+                </div>
+            </div>
+            <img src="assets/img/results/robot-arm.png">
         </div>
-        <img src="assets/img/results/robot-arm.png">
-    </div>
 
-    <div class="recipe-area">
-        <div class="recipe-container" *ngFor="let recipe of recipes.recipeResults()?.recipes ?? []; let i = index">
-            <h1><img src="assets/img/results/icon.png">Recipe {{ i + 1 }}</h1>
-            <h2>{{ recipe.name }}</h2>
-            <p><img src="assets/img/preferences/schedule.png">Cooking time: {{ recipe.cookingTime }} min</p>
-            <button (click)="loadView()">View</button>
+        <div class="recipe-area">
+            <div class="recipe-container" *ngFor="let recipe of recipes.recipeResults()?.recipes ?? []; let i = index">
+                <h1><img src="assets/img/results/icon.png">Recipe {{ i + 1 }}</h1>
+                <h2>{{ recipe.name }}</h2>
+                <p><img src="assets/img/preferences/schedule.png">Cooking time: {{ recipe.cookingTime }} min</p>
+                <button (click)="loadView()">View</button>
+            </div>
         </div>
-    </div>
 
-    <div class="btn-area">
-        <div>
-        <button (click)="recipes.sendRecipeRequest()">Generate new recipe</button>
-        <img src="assets/img/results/arrow-right-withe.png">
+        <div class="btn-area">
+            <div>
+                <button (click)="recipes.sendRecipeRequest()">Generate new recipe</button>
+                <img src="assets/img/Arrow-white.png">
+            </div>
         </div>
-    </div>
     </section>
 
-   <article class="loading-animation" [class.dnone]="recipes.dataLoaded()">
-    <div>
-    <img src="assets/img/loading-animation/laoding.gif">
-    </div>
-    <h4>Generating ...</h4>
-   </article>
+        <app-error-handler class="error-message" [class.dnone]="!recipes.errorIngredients()"></app-error-handler>
+        <app-error-quota class="error-message" [class.dnone]="!recipes.errorQuota()"></app-error-quota>
+   
+
+    <article class="loading-animation" [class.dnone]="recipes.dataLoaded() || recipes.errorIngredients() || recipes.errorQuota()">
+        <div>
+            <img src="assets/img/loading-animation/loading.gif">
+        </div>
+        <h4>Generating <p>.</p>
+            <p>.</p>
+            <p>.</p>
+        </h4>
+    </article>
 </main>

@@ -186,6 +186,9 @@ input {
    section{
     @include flex-center;
     flex-direction: column;
+    .addlist{
+        padding-left: 5px;
+    }
    }
 }
 

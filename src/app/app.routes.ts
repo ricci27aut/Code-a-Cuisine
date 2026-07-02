@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { StartScreen } from '../app/components/start-screen/start-screen';
-import { GenrateRecipe } from '../app/components/genrate-recipe/genrate-recipe';
+import { GenrateRecipe } from './components/generate-recipe/generate-recipe';
 import { Preferences } from '../app/components/preferences/preferences'
 import { Results } from '../app/components/results/results';
 import { RecipeDitail } from '../app/components/recipe-ditail/recipe-ditail'
@@ -13,7 +13,7 @@ export const routes: Routes = [
         component: StartScreen
     },
     {
-        path: "genrate-recipe",
+        path: "generate-recipe",
         component: GenrateRecipe
     },
     {

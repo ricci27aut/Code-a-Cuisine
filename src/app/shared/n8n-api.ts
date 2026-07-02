@@ -9,7 +9,9 @@ export class N8nApi {
   recipeIngredients = signal<any[]>([]);
 recipePreferences = signal<any>({});
 recipeResults = signal<any>([]);
-dataLoaded = signal(true);
+dataLoaded = signal(false);
+errorIngredients = signal(false);
+errorQuota = signal(false);
 
 sendRecipeRequest() {
   const url = 'http://localhost:5678/webhook-test/recipe';
@@ -27,8 +29,11 @@ sendRecipeRequest() {
       this.dataLoaded.set(true);
     },
     error: error => {
-      console.error('Fehler:', error);
-      this.dataLoaded.set(true);
+      if (error.status === 400) {
+        this.errorIngredients.set(true);
+      } else if (error.status === 429) {
+        this.errorQuota.set(true);
+      }
     }
   });
 }

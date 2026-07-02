@@ -8,10 +8,12 @@ main {
     height: 100vh;
     color: white;
     font-family: 'Quicksand', sans-serif;
-
 }
 
 section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
     max-width: 1440px;
 }
@@ -33,10 +35,40 @@ section {
 
 
     h4 {
+        display: flex;
+        gap: 5px;
         padding-top: 20px;
-        font-size: 48px;
+        font-size: clamp(36px, 4vw, 48px);
         font-weight: 500;
         font-family: 'Ubuntu', sans-serif;
+
+        p {
+            animation: blinken 2s linear infinite;
+
+            &:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: 0.4s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: 0.8s;
+            }
+        }
+    }
+}
+
+@keyframes blinken {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
     }
 }
 
@@ -49,14 +81,15 @@ section {
 
     h1 {
         color: $font-color-white;
-        font-size: 54px;
+        font-size: clamp(32px, 4vw, 54px);
         font-weight: 600;
         margin-bottom: 20px;
     }
 
     span {
         color: $font-color-white;
-        font-size: 24px;
+        font-size: clamp(18px, 2vw, 24px);
+        ;
     }
 
 
@@ -65,7 +98,8 @@ section {
     }
 
     img {
-        width: 574px;
+        width: clamp(290px, 40%, 574px);
+        height: auto;
         border-radius: 16px;
     }
 }
@@ -90,14 +124,17 @@ section {
     margin-top: 80px;
     width: 90%;
     @include flex-start;
+    flex-wrap: wrap;
     gap: 30px;
     color: $font-green;
 
     .recipe-container {
+        position: relative;
+        box-sizing: border-box;
         background-color: $container-green;
         border-radius: 16px;
-        width: fit-content;
-        min-width: 300px;
+        width: 400px;
+        min-height: 250px;
         height: 220px;
         padding: 15px;
 
@@ -116,7 +153,7 @@ section {
 
     h2 {
         margin: 10px 0px;
-        font-size: 32px;
+        font-size: clamp(24px, 3vw, 32px);
         color: black;
     }
 
@@ -142,12 +179,15 @@ section {
 }
 
 .btn-area {
+    margin-top: 50px;
     width: 90%;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
     div {
         padding: 3px;
+
         button {
             color: white;
             font-family: 'Quicksand', sans-serif;
@@ -155,14 +195,63 @@ section {
             font-size: 20px;
             margin-right: 10px;
         }
+
         &:hover {
-            background-color: rgba(245, 222, 179, 0.113);   
+            background-color: rgba(245, 222, 179, 0.113);
         }
     }
 
 }
 
-
 .dnone {
-    display: none;
+    display: none !important;
+}
+
+.robot-arm{
+    display:none
+}
+
+.error-message {
+    @include flex-center;
+    width: 100%;
+}
+
+header{
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
+@media(max-width: 920px){
+
+    .robot-arm{
+        display: block !important;
+        width: 344px;
+        height: auto;
+        border-radius: 16px;
+    }
+
+    .title-container {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        
+
+        img{
+            display:none
+        }
+
+        .text-area{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+            padding: 0px 20px;
+        }
+    }
+      .recipe-area {
+            align-items: center;
+        justify-content: center;
+        }
 }

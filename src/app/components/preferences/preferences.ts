@@ -24,7 +24,7 @@ export class Preferences {
   checked: boolean = false;
 
   countUp(list: 'persons' | 'portions'): void {
-    if (this[list] >= 8) {
+    if (this[list] >= 2) {
       return;
     }
     this[list] += 1;

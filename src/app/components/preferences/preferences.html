@@ -1,52 +1,67 @@
 <main>
-     <header ><img class="logo" src="assets/img/logo-green.png">
-            <p routerLink='/genrate-recipe'><img src="assets/img/arrow-left.png">Ingredients</p>
-        </header>
+    <header><img class="logo" src="assets/img/logo-green.png">
+        <p routerLink='/generate-recipe'><img src="assets/img/arrow-left.png">Ingredients</p>
+    </header>
     <div class="possition-contnet">
-    <h1>Choose your preferences</h1>
-    <div class="count-container">
-        <div>
-            <h2>How many portions you need?</h2>
-            <div class="counter-style">
-                <img (click)="countDown('portions')" src="assets/img/preferences/delet-box.png">
-                <p class="count-value">{{portions}}</p><p class="margin-right">Portions</p>
-                <img (click)="countUp('portions')" src="assets/img/preferences/add-box.png">
+        <h1>Choose your preferences</h1>
+        <div class="count-container">
+            <div>
+                <h2>How many portions you need?</h2>
+                <div class="counter-style">
+                    <img (click)="countDown('portions')" src="assets/img/preferences/delet-box.png">
+                    <p class="count-value">{{portions}}</p>
+                    <p class="margin-right">Portions</p>
+                    <img (click)="countUp('portions')" src="assets/img/preferences/add-box.png">
+                </div>
             </div>
-        </div>
-        <div> 
-            <h2>How many are cooking?</h2>
-             <div class="counter-style">
-                <img (click)="countDown('persons')" src="assets/img/preferences/delet-box.png">
-                <p class="count-value">{{persons}}</p><p class="margin-right">Persons</p>
-                <img (click)="countUp('persons')" src="assets/img/preferences/add-box.png">
+            <div>
+                <h2>How many are cooking?</h2>
+                <div class="counter-style">
+                    <img (click)="countDown('persons')" src="assets/img/preferences/delet-box.png">
+                    <p class="count-value">{{persons}}</p>
+                    <p class="margin-right">Persons</p>
+                    <img (click)="countUp('persons')" src="assets/img/preferences/add-box.png">
+                </div>
             </div>
         </div>
     </div>
-</div>
     <section>
         <div>
             <h3><img src="assets/img/preferences/schedule.png">Cooking time:</h3>
             <div class="chosse-container">
-            <p (click)="setTime('Qick')" [class.fix]="time === 'Qick'" class="chosse-p">Qick</p>
-            <p (click)="setTime('Medium')" [class.fix]="time === 'Medium'" class="chosse-p">Medium</p>
-            <p (click)="setTime('Complex')" [class.fix]="time === 'Complex'" class="chosse-p">Complex</p>
+                <div class="time-container">
+                    <p (click)="setTime('Qick')" [class.fix]="time === 'Qick'" class="chosse-p">Qick</p><span>up to
+                        20min</span>
+                </div>
+
+                <div class="time-container">
+                    <p (click)="setTime('Medium')" [class.fix]="time === 'Medium'" class="chosse-p">Medium</p>
+                    <span>25-40
+                        min</span>
+                </div>
+                <div class="time-container">
+                    <p (click)="setTime('Complex')" [class.fix]="time === 'Complex'" class="chosse-p">Complex</p>
+                    <span>over 45min</span>
+                </div>
             </div>
         </div>
         <div>
             <h3><img src="assets/img/preferences/public.png">Cuisine</h3>
             <div class="chosse-container">
-                <p [class.fix]="cuisine === countrie" (click)="setCuisine(countrie)" *ngFor="let countrie of countries, let i = index" class="chosse-p">{{countrie}}</p>
+                <p [class.fix]="cuisine === countrie" (click)="setCuisine(countrie)"
+                    *ngFor="let countrie of countries, let i = index" class="chosse-p">{{countrie}}</p>
             </div>
         </div>
         <div>
             <h3><img src="assets/img/preferences/fork_spoon.png">Diet preferences</h3>
-             <div class="chosse-container">
-                <p *ngFor="let prefer of preferencs, let i = index" class="chosse-p" [class.fix]="prefer === diet" (click)="setDiet(prefer)">{{prefer}}</p>
+            <div class="chosse-container">
+                <p *ngFor="let prefer of preferencs, let i = index" class="chosse-p" [class.fix]="prefer === diet"
+                    (click)="setDiet(prefer)">{{prefer}}</p>
             </div>
         </div>
     </section>
     <div class="save-btn">
         <p [class.dnone]="!checked">Please select all preferences before generating a recipe</p>
-    <button (click)="checkImput()" >Generate a recipe</button>
+        <button (click)="checkImput()">Generate a recipe</button>
     </div>
 </main>
