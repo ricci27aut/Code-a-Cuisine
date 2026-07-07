@@ -4,7 +4,7 @@
     </header>
     <section>
     <div class="btn-area max-width"><button  routerLink='/generate-recipe'>Generate a recipe</button></div>
-    <div class="title-container"><h1>Italian cuisine</h1></div>
+    <div class="title-container"><h1>{{cuisine}} cuisine</h1></div>
         
         <div class="recipes-container max-width" [ngClass]="{'bg-mobile-items': i % 2 !== 0}"
             *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">

@@ -12,10 +12,14 @@ import { ErrorQuota } from '../error-quota/error-quota';
   styleUrl: './results.scss',
 })
 export class Results {
-recipes = inject(N8nApi);
-router = inject(Router);
+  /** Provides access to the generated recipe results and related API state. */
+  recipes = inject(N8nApi);
 
-loadView(){
-  this.router.navigate(['/View']);
-}
+  /** Angular router used to navigate between application views. */
+  router = inject(Router);
+
+  /** Navigates to the detailed recipe view. */
+  loadView(name: string, category: string): void {
+    this.router.navigate([`/View/${category}/${name}`]);
+  }
 }

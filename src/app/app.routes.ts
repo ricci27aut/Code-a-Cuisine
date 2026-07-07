@@ -7,6 +7,10 @@ import { RecipeDitail } from '../app/components/recipe-ditail/recipe-ditail'
 import { Cookbook } from '../app/components/cookbook/cookbook'
 import { ITRecipes } from '../app/components/it-recipes/it-recipes'
 
+/**
+ * Defines the application's routes and maps each URL path to its component.
+ * Dynamic route parameters identify the selected category and recipe.
+ */
 export const routes: Routes = [
     {
         path: "",

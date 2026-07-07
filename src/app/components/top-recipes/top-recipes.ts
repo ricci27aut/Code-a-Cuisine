@@ -9,10 +9,14 @@ import { FierbaseCookbook } from '../../shared/fierbase-cookbook'
   styleUrl: './top-recipes.scss',
 })
 export class TopRecipes {
+  /** Stores the five recipes with the highest number of likes. */
   topRecipes = signal<any[]>([]);
+
+  /** Provides access to the cookbook data stored in Firebase. */
   service = inject(FierbaseCookbook);
 
-  ngOnInit() {
+  /** Loads, sorts, and stores the five most-liked recipes on initialization. */
+  ngOnInit(): void {
     this.service.getTopRecipes().subscribe(data => {
 
       const recipes = data
@@ -25,7 +29,6 @@ export class TopRecipes {
       recipes.sort((a, b) => (b.likes || 0) - (a.likes || 0));
 
       this.topRecipes.set(recipes.slice(0, 5));
-        console.log(this.topRecipes());
     });
   }
 }
