@@ -1,59 +1,120 @@
-# CodeACuisine
+# Code a Cuisine
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
+Code a Cuisine is a recipe web app built with Angular. Users can enter ingredients, select preferences such as cuisine, diet, cooking time, people, and portions, and generate recipe suggestions through an n8n AI workflow. The app also includes a cookbook with recipe categories, recipe detail pages, likes, and top recipes from Firebase.
 
-## Development server
+## Main Features
 
-To start a local development server, run:
+- Generate recipe suggestions from user ingredients and preferences
+- Add, edit, and delete ingredients with quantity and unit
+- Get ingredient suggestions from TheMealDB
+- Display generated recipes, invalid-input errors, and quota errors
+- Browse cookbook categories such as Italian, German, Japanese, Gourmet, Indian, and Fusion
+- Open recipe detail pages with ingredients, directions, cooking time, nutrition, and likes
+- Show top recipes based on Firebase likes
 
-```bash
-ng serve
-```
+## Requirements
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Install these tools before running the project:
 
-## Code scaffolding
+- Node.js
+- npm
+- n8n, if you want to use the AI recipe generation locally
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular itself does not need to be installed globally. The Angular CLI is included in the project dependencies and is installed with `npm install`.
 
-```bash
-ng generate component component-name
-```
+## Project Setup
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Install all project dependencies:
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Start the local development server:
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Open the app in the browser:
 
-For end-to-end (e2e) testing, run:
+```text
+http://localhost:4200/
+```
+
+## n8n Setup
+
+The recipe generation uses a local n8n webhook.
+
+The frontend sends recipe requests to:
+
+```text
+http://localhost:5678/webhook-test/recipe
+```
+
+The URL is configured in:
+
+```text
+src/app/shared/n8n-api.ts
+```
+
+To use recipe generation, n8n must be running locally and the recipe workflow must provide a webhook at this path:
+
+```text
+/webhook-test/recipe
+```
+
+The n8n workflow also needs access to the AI model credentials used for recipe generation, for example a Gemini API key.
+
+## External Services
+
+### Firebase
+
+The cookbook data is loaded from a Firebase Realtime Database. The Firebase URL is configured in:
+
+```text
+src/app/shared/fierbase-cookbook.ts
+```
+
+Firebase is used to:
+
+- Load recipes by category
+- Load recipe details by name
+- Store and update recipe likes
+- Load the top recipes
+
+### TheMealDB
+
+Ingredient suggestions are loaded from TheMealDB:
+
+```text
+https://www.themealdb.com/api/json/v1/1/list.php?i=list
+```
+
+## Useful Commands
+
+Build the project:
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Run tests:
 
-## Additional Resources
+```bash
+npm test
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Tech Stack
+
+- Angular 21
+- TypeScript
+- SCSS
+- Angular Router
+- Angular Signals
+- RxJS
+- Firebase Realtime Database
+- n8n
+- TheMealDB API
+- Vitest
+

@@ -109,7 +109,7 @@ input {
     cursor: pointer;
     font-family: 'Quicksand';
     font-size: 16px;
-
+     padding-left: 5px;
 }
 
 .suggestion-item {
@@ -153,7 +153,7 @@ input {
 }
 
 .item-container {
-    padding: 5px 25px;
+    padding: 0px 25px;
     display: flex;
     align-items: start;
     justify-content: space-between;

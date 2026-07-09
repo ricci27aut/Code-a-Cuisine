@@ -47,6 +47,9 @@ export class GenrateRecipe {
   /** Unit selected for newly added ingredients. */
   selectUnit: string = 'gram';
 
+  /*boolean to check if the ingredient is from the suggestions*/
+  isSuggestedIngredient: boolean = false;
+
   /**
    * Creates the component with an HTTP client for loading ingredient data.
    *
@@ -61,12 +64,14 @@ export class GenrateRecipe {
 
   /** Adds the entered ingredient and quantity to the recipe request. */
   addIngredient(): void {
+    if(this.isSuggestedIngredient === false) { return; }
     const ingred = this.ingred?.nativeElement?.value ?? '';
     const quantity = this.quantity?.nativeElement?.value || 100;;
 
     this.ingredients.update(arr => [...arr, { 'quantity': quantity, 'unit': this.selectUnit, 'name': ingred }]);
 
     this.clearInput()
+    this.isSuggestedIngredient = false;
   }
 
   /** Clears the ingredient and quantity input elements. */
@@ -132,6 +137,7 @@ export class GenrateRecipe {
   addToInput(item: string): void {
     this.ingred.nativeElement.value = item;
     this.ingriedents.set([]);
+    this.isSuggestedIngredient = true;
   }
 
   /**

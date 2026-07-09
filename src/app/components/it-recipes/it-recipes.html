@@ -1,11 +1,13 @@
 <main>
-     <header><img src="assets/img/logo-green.png">
+    <header><img src="assets/img/logo-green.png">
         <p routerLink='/Cook-Book'><img src="assets/img/arrow-left.png">Cookbook</p>
     </header>
     <section>
-    <div class="btn-area max-width"><button  routerLink='/generate-recipe'>Generate a recipe</button></div>
-    <div class="title-container"><h1>{{cuisine}} cuisine</h1></div>
-        
+        <div class="btn-area max-width"><button routerLink='/generate-recipe'>Generate a recipe</button></div>
+        <div [class]="'title-container bg-' + cuisine">
+            <h1>{{ cuisine }} cuisine</h1>
+        </div>
+
         <div class="recipes-container max-width" [ngClass]="{'bg-mobile-items': i % 2 !== 0}"
             *ngFor="let item of service.recipes() | slice:startIndex:endIndex;, let i = index">
             <div class="recipe-titel" [routerLink]="['/View',item.category ,item.name]">
@@ -29,18 +31,18 @@
 
     <footer>
         <div>
-        <p (click)="changePage(pagination - 1)">&lt;</p>
-        <p (click)="changePage(pagination)">{{ pagination }}</p>
-        <p *ngIf="pagination + 1 <= pages" (click)="changePage(pagination + 1)">
-            {{ pagination + 1 }}
-        </p>
-        <p *ngIf="pagination + 2 <= pages" (click)="changePage(pagination + 2)">
-            {{ pagination + 2 }}
-        </p>
-        <b *ngIf="pagination + 7 <= pages">...</b>
-        <p *ngIf="pagination + 7 <= pages">{{ pagination + 7 }}</p>
-        <p (click)="changePage(pagination + 1)">&gt;</p>
+            <p (click)="changePage(pagination - 1)">&lt;</p>
+            <p (click)="changePage(pagination)">{{ pagination }}</p>
+            <p *ngIf="pagination + 1 <= pages" (click)="changePage(pagination + 1)">
+                {{ pagination + 1 }}
+            </p>
+            <p *ngIf="pagination + 2 <= pages" (click)="changePage(pagination + 2)">
+                {{ pagination + 2 }}
+            </p>
+            <b *ngIf="pagination + 7 <= pages">...</b>
+            <p *ngIf="pagination + 7 <= pages">{{ pagination + 7 }}</p>
+            <p (click)="changePage(pagination + 1)">&gt;</p>
         </div>
-         <div class="btn-area-mobile"><button  routerLink='/generate-recipe'>Generate a recipe</button></div>
+        <div class="btn-area-mobile"><button routerLink='/generate-recipe'>Generate a recipe</button></div>
     </footer>
 </main>

@@ -1,5 +1,5 @@
 <div>
     <h1>Oops! Daily limit reached...</h1>
     <p>You’ve used all 3 of your recipe requests for today. Please come back tomorrow and try again.</p>
-    <button [routerLink]="['/']">Go back to home<img src="assets/img/Arrow-white.png"></button>
+    <button [routerLink]="['/']" (click)="resetErrors()">Go back to home<img src="assets/img/Arrow-white.png"></button>
 </div>

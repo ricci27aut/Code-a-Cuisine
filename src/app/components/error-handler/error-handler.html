@@ -2,5 +2,5 @@
 <div>
     <h1>Ups! Not quite enough...</h1>
     <p>It looks like some ingredient quantities aren’t sufficient for your selected servings. Please add or adjust quantities and try again.</p>
-<button [routerLink]="['/generate-recipe']">Go back to ingredients<img src="assets/img/Arrow-white.png"></button>
+<button [routerLink]="['/generate-recipe']" (click)="resetErrors()">Go back to ingredients<img src="assets/img/Arrow-white.png"></button>
 </div>

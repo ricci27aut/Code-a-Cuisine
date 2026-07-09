@@ -27,7 +27,7 @@ section {
     height: clamp(90px,16vw, 150px);
     width: 100%;
     @include flex-center;
-    background-image: url('../../../../public/assets/img/cookbook/cuisine.png');
+   
     background-repeat: no-repeat;
     background-position: center;
     background-size: clamp(320px, 100%, 1440px) clamp(87px,16vw, 150px);
@@ -39,6 +39,33 @@ section {
         font-family: 'Quicksand';
         color: #10310B;
     }
+}
+
+.bg-Italian {
+  background-image: url('/assets/img/cookbook/it-recipes/Italian.png');
+}
+
+.bg-German {
+  background-image: url('/assets/img/cookbook/it-recipes/German.png');
+   padding-bottom: 10px;
+}
+
+.bg-Japanese {
+  background-image: url('/assets/img/cookbook/it-recipes/Japanese.png');
+  padding-bottom: 10px;
+}
+
+.bg-Gourmet {
+  background-image: url('/assets/img/cookbook/it-recipes/Gourmet.png');
+  padding-top: 15px;
+}
+
+.bg-Indian {
+  background-image: url('/assets/img/cookbook/it-recipes/Indian.png');
+}
+
+.bg-Fusion {
+  background-image: url('/assets/img/cookbook/it-recipes/Fusion.png');
 }
 
 .recipes-container {
