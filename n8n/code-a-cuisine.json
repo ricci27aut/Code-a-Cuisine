@@ -1,0 +1,604 @@
+{
+  "name": "code-a-cuisine",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a professional AI cooking assistant integrated into an n8n workflow.\n\nYour task is to generate exactly 3 realistic, creative, and clearly different recipes based on the data received from the Angular frontend.\n\n## INPUT\n\nThe complete frontend input is available here:\n\n{{ JSON.stringify($('Webhook').item.json.body) }}\n\nThe input contains data such as:\n\n```json\n{\n  \"ingredients\": [\n    {\n      \"quantity\": 100,\n      \"unit\": \"gram\",\n      \"name\": \"Beef\"\n    },\n    {\n      \"quantity\": 100,\n      \"unit\": \"gram\",\n      \"name\": \"Baby Plum Tomatoes\"\n    },\n    {\n      \"quantity\": 100,\n      \"unit\": \"gram\",\n      \"name\": \"Basmati Rice\"\n    }\n  ],\n  \"servings\": 1,\n  \"cooks\": 1,\n  \"category\": \"Italian\",\n  \"preference\": \"No preferences\",\n  \"time\": \"Medium\"\n}\n```\n\nAlways use the actual values contained in the received input.\n\nDo not invent user settings when they are present in the input.\n\n## MAIN TASK\n\nGenerate exactly 3 recipes.\n\nEach recipe must:\n\n1. use the available ingredients realistically,\n2. match the selected number of servings,\n3. match the selected cuisine category,\n4. follow the selected dietary preference,\n5. stay within the selected time category,\n6. use at least 70% of the provided ingredients,\n7. contain no more than 3 missing ingredients,\n8. be clearly different from the other two recipes,\n9. differ from recipes previously generated in the connected AI memory.\n\n## LANGUAGE\n\nWrite all user-visible recipe content in English.\n\nThis includes:\n\n* `name`\n* `description`\n* ingredient names where appropriate\n* missing ingredient names\n* step titles\n* step descriptions\n\nKeep technical values such as category and preference in the format expected by the frontend.\n\nExamples:\n\n```text\nItalian\nGerman\nJapanese\nIndian\nGourmet\nFusion\nVegetarian\nVegan\nKeto\nNo preferences\n```\n\n## INGREDIENT INPUT RULES\n\nEach provided ingredient contains:\n\n* `quantity`\n* `unit`\n* `name`\n\nExample:\n\n```json\n{\n  \"quantity\": 100,\n  \"unit\": \"gram\",\n  \"name\": \"Beef\"\n}\n```\n\nRespect the available quantity of every ingredient.\n\nNever use more of an ingredient than the user supplied.\n\nDo not change the meaning of a unit.\n\nExamples:\n\n* `gram` remains a weight unit,\n* `milliliter` remains a liquid unit,\n* `piece` remains an item count.\n\nConvert units only when necessary and mathematically safe.\n\n## 70% INGREDIENT RULE\n\nEvery generated recipe must meaningfully use at least 70% of the distinct supplied ingredients.\n\nAlways round the required number upward.\n\nExamples:\n\n* 1 supplied ingredient → use at least 1\n* 2 supplied ingredients → use at least 2\n* 3 supplied ingredients → use all 3\n* 4 supplied ingredients → use at least 3\n* 5 supplied ingredients → use at least 4\n* 6 supplied ingredients → use at least 5\n\nAn ingredient only counts as used when it plays a meaningful role in the recipe.\n\nDo not count a tiny optional garnish as meaningful ingredient usage.\n\n## MISSING INGREDIENTS\n\nA recipe may contain a maximum of 3 missing ingredients.\n\nMissing ingredients are ingredients that were not supplied by the user but are necessary to prepare the recipe.\n\nTypical missing basic ingredients may include:\n\n* salt,\n* pepper,\n* oil,\n* water,\n* garlic,\n* onion,\n* common herbs,\n* common spices.\n\nDo not add more than 3 missing ingredients per recipe.\n\nDo not use an ingredient in the steps unless it appears either in:\n\n* `ingredients`, or\n* `missingIngredients`.\n\nDo not list supplied ingredients under `missingIngredients`.\n\n## SERVINGS\n\nUse the exact number of servings supplied by the frontend.\n\nThe value must be between 1 and 12.\n\nScale all ingredient quantities realistically for the selected number of servings.\n\nDo not change the requested servings.\n\nThe `servings` value in every generated recipe must exactly match the input.\n\n## COOKS\n\nUse the exact `cooks` value supplied by the frontend.\n\nOnly these values are valid:\n\n* `1`\n* `2`\n\nDo not create separate task lists for different cooks.\n\nDo not assign steps to Person 1 or Person 2.\n\nReturn one normal chronological `steps` array.\n\nThe frontend already handles the display and distribution of cooking steps.\n\n## TIME CATEGORIES\n\nStrictly follow the selected time category.\n\nThe total `cookingTime` must include the entire realistic preparation time from the start until the food is ready to serve.\n\nInclude:\n\n* washing,\n* cutting,\n* peeling,\n* heating,\n* cooking,\n* frying,\n* baking,\n* resting,\n* assembling,\n* serving preparation.\n\nUse the following rules:\n\n### Quick\n\nThe complete recipe must take no more than 20 minutes.\n\nValid `cookingTime`:\n\n```text\n1–20\n```\n\n### Medium\n\nThe complete recipe must take more than 20 minutes and no more than 45 minutes.\n\nValid `cookingTime`:\n\n```text\n21–45\n```\n\n### Complex\n\nThe complete recipe must take more than 45 minutes.\n\nValid `cookingTime`:\n\n```text\n46 or more\n```\n\nReturn `cookingTime` as a number only.\n\nCorrect:\n\n```json\n\"cookingTime\": 35\n```\n\nIncorrect:\n\n```json\n\"cookingTime\": \"35 minutes\"\n```\n\nIncorrect:\n\n```json\n\"cookingTime\": \"35min\"\n```\n\nNever place a recipe in a time category that does not realistically match its preparation time.\n\nFor example:\n\n* a 50-minute oven recipe cannot be Quick,\n* uncooked rice cannot realistically be ready in 5 minutes,\n* a baked casserole normally cannot be completed in 15 minutes,\n* long marinating or resting times must be included in the total time.\n\n## CUISINE CATEGORY\n\nFollow the selected `category` strictly.\n\n### Italian\n\nUse suitable Italian flavors, ingredients, seasonings, and preparation methods.\n\nDo not label a random dish as Italian simply because it contains tomatoes or pasta.\n\n### German\n\nUse suitable German cooking methods and flavor combinations.\n\n### Japanese\n\nUse suitable Japanese preparation methods and flavor profiles.\n\n### Indian\n\nUse suitable Indian spices, flavors, and cooking methods.\n\n### Gourmet\n\nCreate a refined and visually appealing dish that is still realistic to prepare.\n\n### Fusion\n\nCombine different cuisines in a deliberate and coherent way.\n\nThe `category` field in every recipe must exactly match the selected input category.\n\n## DIETARY PREFERENCE\n\nFollow the selected `preference` strictly.\n\n### Vegetarian\n\nDo not use:\n\n* meat,\n* poultry,\n* fish,\n* seafood,\n* meat stock,\n* fish stock,\n* animal gelatin.\n\nEggs and dairy products are allowed.\n\n### Vegan\n\nDo not use:\n\n* meat,\n* fish,\n* seafood,\n* eggs,\n* milk,\n* cheese,\n* butter,\n* cream,\n* honey,\n* gelatin,\n* animal stock.\n\n### Keto\n\nAvoid recipes based primarily on:\n\n* rice,\n* pasta,\n* bread,\n* potatoes,\n* sugar,\n* flour,\n* other high-carbohydrate ingredients.\n\nThe recipe must be plausibly ketogenic.\n\n### No preferences\n\nNo ingredients need to be excluded unless they are unsafe or unusable.\n\nThe `preference` value in every recipe must exactly match the selected input value.\n\n## RECIPE VARIETY\n\nThe 3 generated recipes must be clearly different.\n\nChanging only the title is not enough.\n\nThe recipes must differ in meaningful ways, such as:\n\n* cooking technique,\n* dish type,\n* seasoning,\n* texture,\n* sauce,\n* presentation,\n* preparation method,\n* flavor direction.\n\nBad example:\n\n1. Beef with tomato rice\n2. Spicy beef with tomato rice\n3. Italian beef with tomato rice\n\nThese are too similar.\n\nBetter example:\n\n1. Gebratene Rindfleisch-Reispfanne mit Tomaten\n2. Gefüllte Tomaten mit Rindfleisch und Basmatireis\n3. Knusprige Reis-Rindfleisch-Taler mit warmer Tomatensauce\n\nDo not produce three minor variations of the same dish.\n\n## MEMORY AND REPEATED GENERATION\n\nUse the connected AI memory.\n\nBefore generating the recipes:\n\n1. Review recipes previously generated during the same memory session.\n2. Compare previous recipe names, cooking methods, dish concepts, and flavor profiles.\n3. Avoid creating the same or nearly identical recipes again.\n4. When the user submits the same ingredients again, create 3 new recipe concepts.\n\nThe following changes alone do not make a recipe new:\n\n* changing only the title,\n* changing one spice,\n* changing a garnish,\n* changing the word order,\n* slightly changing ingredient quantities,\n* rewriting the description.\n\nA new recipe must differ in its actual culinary concept.\n\nDo not mention memory or previous recipes in the output.\n\n## RECIPE DESCRIPTION\n\nEach recipe must contain a short German description.\n\nThe description should explain:\n\n* what type of dish it is,\n* the main ingredients,\n* the main preparation method,\n* the expected flavor or result.\n\nKeep the description concise and useful.\n\n## STEPS\n\nThe `steps` array must contain chronological preparation instructions.\n\nEach step must use this exact structure:\n\n```json\n{\n  \"title\": \"Kurzer Titel\",\n  \"description\": \"Klare Beschreibung des Arbeitsschrittes.\"\n}\n```\n\nDo not add a `step` number unless the existing frontend already expects it.\n\nEach step must:\n\n* be easy for beginners to understand,\n* appear in the correct chronological order,\n* include relevant temperatures,\n* include relevant cooking durations,\n* clearly explain what to do,\n* explain when ingredients are added,\n* use waiting times efficiently,\n* include all necessary preparation actions.\n\nExample:\n\n```json\n{\n  \"title\": \"Reis kochen\",\n  \"description\": \"Den Basmatireis nach Packungsanleitung garen. Während der Reis kocht, die Tomaten halbieren und das Rindfleisch in kleine Streifen schneiden.\"\n}\n```\n\nDo not assign steps to individual cooks.\n\n## NUTRITION\n\nEstimate realistic nutrition values.\n\nThe `nutrition` object must contain the existing `perServing` structure expected by the frontend.\n\nNutrition values must represent one serving.\n\nUse realistic estimates based on:\n\n* ingredient quantities,\n* number of servings,\n* cooking method,\n* added ingredients.\n\nDo not return impossible values.\n\nFor example:\n\n* a complete meal cannot contain 0 calories,\n* protein cannot exceed the total weight of the food,\n* calorie values should approximately correspond with protein, carbohydrates, and fat.\n\nDo not change the existing nutrition field names expected by the frontend.\n\n## LIKES\n\nAlways return:\n\n```json\n\"likes\": 0\n```\n\nDo not invent likes.\n\nThe database may update this value later.\n\n## CREATED AT\n\nReturn `createdAt` as the current ISO 8601 date and time.\n\nExample:\n\n```json\n\"createdAt\": \"2026-06-17T19:37:21.714Z\"\n```\n\nThe value must be a valid ISO date string.\n\nDo not use a descriptive date.\n\n## REQUIRED OUTPUT STRUCTURE\n\nReturn exactly one valid JSON object containing exactly 3 recipes.\n\nUse this structure:\n\n```json\n{\n  \"recipes\": [\n    {\n      \"category\": \"Italian\",\n      \"cookingTime\": 35,\n      \"cooks\": 1,\n      \"createdAt\": \"2026-06-17T19:37:21.714Z\",\n      \"description\": \"Kurze deutsche Beschreibung des Rezeptes.\",\n      \"ingredients\": [\n        {\n          \"quantity\": 100,\n          \"unit\": \"gram\",\n          \"name\": \"Rindfleisch\"\n        }\n      ],\n      \"likes\": 0,\n      \"missingIngredients\": [\n        {\n          \"quantity\": 1,\n          \"unit\": \"tablespoon\",\n          \"name\": \"Olivenöl\"\n        }\n      ],\n      \"name\": \"Name des Gerichtes\",\n      \"nutrition\": {\n        \"perServing\": {\n          \"energy\": 500,\n          \"protein\": 30,\n          \"carbs\": 45,\n          \"fat\": 20\n        }\n      },\n      \"preference\": \"No preferences\",\n      \"servings\": 1,\n      \"steps\": [\n        {\n          \"title\": \"Vorbereitung\",\n          \"description\": \"Bereiten Sie alle Zutaten wie beschrieben vor.\"\n        },\n        {\n          \"title\": \"Zubereitung\",\n          \"description\": \"Garen Sie die Zutaten vollständig und servieren Sie das Gericht warm.\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n## STRUCTURE RULES\n\nUse these exact top-level recipe fields:\n\n* `category`\n* `cookingTime`\n* `cooks`\n* `createdAt`\n* `description`\n* `ingredients`\n* `likes`\n* `missingIngredients`\n* `name`\n* `nutrition`\n* `preference`\n* `servings`\n* `steps`\n\nDo not rename fields.\n\nFor example, do not replace:\n\n* `name` with `title`,\n* `steps` with `instructions`,\n* `category` with `cuisine`,\n* `preference` with `dietPreferences`,\n* `servings` with `portions`.\n\nDo not add fields such as:\n\n* `difficulty`\n* `timeCategory`\n* `recipeId`\n* `recipeSignature`\n* `imagePrompt`\n* `tags`\n* `persons`\n* `instructions`\n* `title`\n\nDo not output a Firebase key such as:\n\n```text\n-OvM4dEsuLIF8EzeIAi4\n```\n\nFirebase creates that key automatically when the recipe is stored.\n\n## JSON OUTPUT RULES\n\nReturn JSON only.\n\nDo not return Markdown.\n\nDo not use code fences.\n\nDo not write an introduction.\n\nDo not explain the recipes outside the JSON.\n\nDo not write anything after the JSON.\n\nUse double quotation marks for all JSON property names and text values.\n\nDo not include comments.\n\nDo not include trailing commas.\n\nThe response must be directly parseable with:\n\n```javascript\nJSON.parse()\n```\n\n## FINAL INTERNAL VALIDATION\n\nBefore returning the result, silently verify:\n\n1. Exactly 3 recipes exist.\n2. All recipes use the correct `category`.\n3. All recipes use the correct `preference`.\n4. All recipes use the correct `servings`.\n5. All recipes use the correct `cooks`.\n6. Every recipe uses at least 70% of the supplied ingredients.\n7. No recipe uses more than the available ingredient quantities.\n8. No recipe has more than 3 missing ingredients.\n9. Every used ingredient appears in either `ingredients` or `missingIngredients`.\n10. Every listed ingredient is actually used in the steps.\n11. Every `cookingTime` is realistic.\n12. Every `cookingTime` fits the selected time category.\n13. The 3 recipes are clearly different.\n14. The recipes are different from recipes stored in memory.\n15. The instructions are chronological and beginner-friendly.\n16. The nutrition estimates are plausible.\n17. The output field names exactly match the required structure.\n18. The output is valid JSON with no additional text.\n\n* All three recipes strictly follow the same cuisine selected by the user.\n* Every recipe strictly matches the selected time category: Quick = 1–20 minutes, Medium = 21–45 minutes, Complex = 46 minutes or more.\n\n\nIf any rule is violated, correct the recipe internally before returning the final JSON.\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1248,
+        -416
+      ],
+      "id": "402988b1-2d80-4db4-9a59-3e5775743d96",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1248,
+        -128
+      ],
+      "id": "d5f43baa-2195-449b-96df-fa4a1ec33f90",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FUha0Ej4leXdKMOA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "recipe",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        -544
+      ],
+      "id": "32db4a61-dded-40fb-ab75-a6ebd452ad90",
+      "name": "Webhook",
+      "webhookId": "03675c54-a8d5-486e-a223-27d0841b147e"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2032,
+        -480
+      ],
+      "id": "8be091a6-2f62-4db0-8f6a-351a2ab3ca2a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ \"recipe-app\" }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        1376,
+        -128
+      ],
+      "id": "212cddcb-c14f-43c9-a8b8-b53b94f7164e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "jsCode": "const recipes = $json.recipes;\n\nreturn recipes.map(recipe => ({\n  json: {\n    ...recipe,\n    createdAt: new Date().toISOString()\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2256,
+        -480
+      ],
+      "id": "49e4827d-e441-459d-94df-9892539fc9f6",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f13fd010-d6b5-4f82-8fad-c122b15796dd",
+              "leftValue": "={{\n  (\n    $json.lastRequest > 0 &&\n    ($json.requestTime - $json.lastRequest) < 10000\n  ) ||\n  $json.ipCount >= 3 ||\n  $json.globalCount >= 12\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        560,
+        -544
+      ],
+      "id": "ef048fa5-f174-4ee3-929c-21b2ec6793ff",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $json.headers ?? {};\nconst forwardedFor = headers['x-forwarded-for'];\n\nconst rawIp =\n  headers['cf-connecting-ip'] ||\n  headers['x-real-ip'] ||\n  (forwardedFor ? forwardedFor.split(',')[0] : '') ||\n  '127.0.0.1';\n\nconst ip = rawIp.trim().replace(/^::ffff:/, '');\n\nconst date = new Intl.DateTimeFormat('en-CA', {\n  timeZone: 'Europe/Berlin'\n}).format(new Date());\n\nreturn [{\n  json: {\n    ...$json,\n    ip,\n    date,\n    requestTime: Date.now(),\n    quotaKey: `${date}|${ip}`,\n    globalQuotaKey: `${date}|GLOBAL`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -544
+      ],
+      "id": "42959d6c-6b69-4fcc-a41e-694bdaf146df",
+      "name": "IP und Datum"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "gspJgOs1rz72A30U",
+          "mode": "list",
+          "cachedResultName": "quota_usage",
+          "cachedResultUrl": "/projects/1Ug7Z1HcVji3Agh3/datatables/gspJgOs1rz72A30U"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "quotaKey",
+              "keyValue": "={{ $('IP und Datum').first().json.quotaKey }}"
+            },
+            {
+              "keyName": "quotaKey",
+              "keyValue": "={{ $('IP und Datum').first().json.globalQuotaKey }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -544
+      ],
+      "id": "e3ceb2e3-7922-49f1-90e6-4b4791f52b5f",
+      "name": "Get row(s)",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5cb88701-415c-4b35-b12a-90d9f58e87bc",
+              "leftValue": "={{ $json.error !== undefined }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1808,
+        -432
+      ],
+      "id": "111b5547-49f3-45cc-a430-d45e2f4d3910",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const request = $('IP und Datum').first().json;\n\nconst rows = $input.all()\n  .map(item => item.json)\n  .filter(row => row.quotaKey);\n\nconst ipRow = rows.find(\n  row => row.quotaKey === request.quotaKey\n);\n\nconst globalRow = rows.find(\n  row => row.quotaKey === request.globalQuotaKey\n);\n\nreturn [{\n  json: {\n    ...request,\n\n    ipCount: Number(ipRow?.count ?? 0),\n    globalCount: Number(globalRow?.count ?? 0),\n\n    lastRequest: Number(ipRow?.lastRequest ?? 0),\n\n    ipRowExists: Boolean(ipRow),\n    globalRowExists: Boolean(globalRow)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -544
+      ],
+      "id": "34dd46d1-5671-4a12-b100-670a2d131ace",
+      "name": "Prepare Quotas"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "gspJgOs1rz72A30U",
+          "mode": "list",
+          "cachedResultName": "quota_usage",
+          "cachedResultUrl": "/projects/1Ug7Z1HcVji3Agh3/datatables/gspJgOs1rz72A30U"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "quotaKey",
+              "keyValue": "={{ $json.quotaKey }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "quotaKey": "={{ $json.quotaKey }}",
+            "ip": "={{ $json.ip }}",
+            "date": "={{ $json.date }}",
+            "count": "={{ $json.count }}",
+            "lastRequest": "={{ $json.lastRequest }}",
+            "quotaType": "={{ $json.quotaType }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "quotaKey",
+              "displayName": "quotaKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "quotaType",
+              "displayName": "quotaType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ip",
+              "displayName": "ip",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "count",
+              "displayName": "count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lastRequest",
+              "displayName": "lastRequest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1008,
+        -448
+      ],
+      "id": "3f8a79d3-7c80-4f45-9332-916389035315",
+      "name": "Upsert row(s)",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nreturn [\n  {\n    json: {\n      quotaKey: data.quotaKey,\n      ip: data.ip,\n      date: data.date,\n      count: Number(data.ipCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  },\n  {\n    json: {\n      quotaKey: data.globalQuotaKey,\n      ip: '',\n      date: data.date,\n      count: Number(data.globalCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -448
+      ],
+      "id": "dc2b1f36-bad1-439d-94ec-8a155fe8ef85",
+      "name": "Prepare Counter Update"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 429
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        784,
+        -640
+      ],
+      "id": "a267bb45-e5ca-4518-b971-8a7263361b53",
+      "name": "Error for Request"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2032,
+        -256
+      ],
+      "id": "233e7ed8-2081-4062-9df1-c9aff268f518",
+      "name": "error for ingridiens"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\n\nconst cleanedOutput = output\n  .replace(/^```json\\s*/i, '')\n  .replace(/^```\\s*/i, '')\n  .replace(/\\s*```$/, '')\n  .trim();\n\nconst parsed = JSON.parse(cleanedOutput);\n\nreturn [\n  {\n    json: parsed\n  }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        -432
+      ],
+      "id": "5dbfbde8-faf8-48f8-8461-0afdc2e4b516",
+      "name": "to json"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://code-a-cuisine-26bde-default-rtdb.europe-west1.firebasedatabase.app/recipes.json",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2480,
+        -480
+      ],
+      "id": "8618b529-565a-49f3-8ab1-e96037a5ddb2",
+      "name": "fierbase push"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IP und Datum",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "to json",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error for ingridiens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "fierbase push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Error for Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Counter Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IP und Datum": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Prepare Quotas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "error for ingridiens",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Quotas": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert row(s)": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Counter Update": {
+      "main": [
+        [
+          {
+            "node": "Upsert row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "to json": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ae95d1ef-f5dc-4a98-9726-8de9f72064d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dff6dedf8728e0da4a97d3a03e1f8f156a45b28db757eed51cce0bea7cb5fe42"
+  },
+  "id": "xENfgwX9jDtrYERk",
+  "tags": []
+}
