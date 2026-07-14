@@ -61,21 +61,6 @@
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        2032,
-        -480
-      ],
-      "id": "8be091a6-2f62-4db0-8f6a-351a2ab3ca2a",
-      "name": "Respond to Webhook"
-    },
-    {
-      "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ \"recipe-app\" }}"
       },
@@ -90,16 +75,63 @@
     },
     {
       "parameters": {
-        "jsCode": "const recipes = $json.recipes;\n\nreturn recipes.map(recipe => ({\n  json: {\n    ...recipe,\n    createdAt: new Date().toISOString()\n  }\n}));"
+        "jsCode": "/**\n * Processes the retrieved quota records.\n *\n * This node:\n * - finds the current user's quota record\n * - finds the global daily quota record\n * - extracts request counters\n * - provides default values if no record exists\n *\n * The resulting data is used for rate limit validation.\n */\n\nconst request = $('Generate Request Metadata').first().json;\n\nconst rows = $input.all()\n  .map(item => item.json)\n  .filter(row => row.quotaKey);\n\nconst ipRow = rows.find(\n  row => row.quotaKey === request.quotaKey\n);\n\nconst globalRow = rows.find(\n  row => row.quotaKey === request.globalQuotaKey\n);\n\nreturn [{\n  json: {\n    ...request,\n\n    ipCount: Number(ipRow?.count ?? 0),\n    globalCount: Number(globalRow?.count ?? 0),\n\n    lastRequest: Number(ipRow?.lastRequest ?? 0),\n\n    ipRowExists: Boolean(ipRow),\n    globalRowExists: Boolean(globalRow)\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2256,
-        -480
+        336,
+        -544
       ],
-      "id": "49e4827d-e441-459d-94df-9892539fc9f6",
-      "name": "Code in JavaScript1"
+      "id": "34dd46d1-5671-4a12-b100-670a2d131ace",
+      "name": "Prepare Quotas"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Prepares request metadata for the workflow.\n *\n * This node:\n * - extracts the client's IP address\n * - creates the current date\n * - records the request timestamp\n * - generates quota keys for daily rate limiting\n *\n * These values are used later to identify users,\n * enforce request limits and log requests.\n */\nconst headers = $json.headers ?? {};\nconst forwardedFor = headers['x-forwarded-for'];\n\nconst rawIp =\n  headers['cf-connecting-ip'] ||\n  headers['x-real-ip'] ||\n  (forwardedFor ? forwardedFor.split(',')[0] : '') ||\n  '127.0.0.1';\n\nconst ip = rawIp.trim().replace(/^::ffff:/, '');\n\nconst date = new Intl.DateTimeFormat('en-CA', {\n  timeZone: 'Europe/Berlin'\n}).format(new Date());\n\nreturn [{\n  json: {\n    ...$json,\n    ip,\n    date,\n    requestTime: Date.now(),\n    quotaKey: `${date}|${ip}`,\n    globalQuotaKey: `${date}|GLOBAL`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -544
+      ],
+      "id": "42959d6c-6b69-4fcc-a41e-694bdaf146df",
+      "name": "Generate Request Metadata"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "gspJgOs1rz72A30U",
+          "mode": "list",
+          "cachedResultName": "quota_usage",
+          "cachedResultUrl": "/projects/1Ug7Z1HcVji3Agh3/datatables/gspJgOs1rz72A30U"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "quotaKey",
+              "keyValue": "={{ $('Generate Request Metadata').first().json.quotaKey }}"
+            },
+            {
+              "keyName": "quotaKey",
+              "keyValue": "={{ $('Generate Request Metadata').first().json.globalQuotaKey }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -544
+      ],
+      "id": "e3ceb2e3-7922-49f1-90e6-4b4791f52b5f",
+      "name": "Load User Quota",
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -113,7 +145,7 @@
           "conditions": [
             {
               "id": "f13fd010-d6b5-4f82-8fad-c122b15796dd",
-              "leftValue": "={{\n  (\n    $json.lastRequest > 0 &&\n    ($json.requestTime - $json.lastRequest) < 10000\n  ) ||\n  $json.ipCount >= 3 ||\n  $json.globalCount >= 12\n}}",
+              "leftValue": "=/**\n * Validates the current request against the\n * configured rate limits.\n *\n * Checks:\n * - minimum delay between requests\n * - maximum requests per IP address\n * - maximum global requests per day\n *\n * If any limit is exceeded, the request is blocked.\n */{{\n  (\n    $json.lastRequest > 0 &&\n    ($json.requestTime - $json.lastRequest) < 10000\n  ) ||\n  $json.ipCount >= 3 ||\n  $json.globalCount >= 12\n}}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -133,101 +165,35 @@
         -544
       ],
       "id": "ef048fa5-f174-4ee3-929c-21b2ec6793ff",
-      "name": "If"
+      "name": "Validate Rate Limits"
     },
     {
       "parameters": {
-        "jsCode": "const headers = $json.headers ?? {};\nconst forwardedFor = headers['x-forwarded-for'];\n\nconst rawIp =\n  headers['cf-connecting-ip'] ||\n  headers['x-real-ip'] ||\n  (forwardedFor ? forwardedFor.split(',')[0] : '') ||\n  '127.0.0.1';\n\nconst ip = rawIp.trim().replace(/^::ffff:/, '');\n\nconst date = new Intl.DateTimeFormat('en-CA', {\n  timeZone: 'Europe/Berlin'\n}).format(new Date());\n\nreturn [{\n  json: {\n    ...$json,\n    ip,\n    date,\n    requestTime: Date.now(),\n    quotaKey: `${date}|${ip}`,\n    globalQuotaKey: `${date}|GLOBAL`\n  }\n}];"
+        "options": {
+          "responseCode": 429
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        784,
+        -640
+      ],
+      "id": "a267bb45-e5ca-4518-b971-8a7263361b53",
+      "name": "Return Rate Limit Error"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Updates the user and global quota records.\n *\n * This node:\n * - increments the user's request counter\n * - increments the global request counter\n * - updates the timestamp of the latest request\n *\n * The resulting records are written back to the\n * quota storage in the next step.\n */\nconst data = $input.first().json;\n\nreturn [\n  {\n    json: {\n      quotaKey: data.quotaKey,\n      ip: data.ip,\n      date: data.date,\n      count: Number(data.ipCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  },\n  {\n    json: {\n      quotaKey: data.globalQuotaKey,\n      ip: '',\n      date: data.date,\n      count: Number(data.globalCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -112,
-        -544
+        784,
+        -448
       ],
-      "id": "42959d6c-6b69-4fcc-a41e-694bdaf146df",
-      "name": "IP und Datum"
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "dataTableId": {
-          "__rl": true,
-          "value": "gspJgOs1rz72A30U",
-          "mode": "list",
-          "cachedResultName": "quota_usage",
-          "cachedResultUrl": "/projects/1Ug7Z1HcVji3Agh3/datatables/gspJgOs1rz72A30U"
-        },
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "quotaKey",
-              "keyValue": "={{ $('IP und Datum').first().json.quotaKey }}"
-            },
-            {
-              "keyName": "quotaKey",
-              "keyValue": "={{ $('IP und Datum').first().json.globalQuotaKey }}"
-            }
-          ]
-        },
-        "returnAll": true
-      },
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
-      "position": [
-        112,
-        -544
-      ],
-      "id": "e3ceb2e3-7922-49f1-90e6-4b4791f52b5f",
-      "name": "Get row(s)",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "5cb88701-415c-4b35-b12a-90d9f58e87bc",
-              "leftValue": "={{ $json.error !== undefined }}",
-              "rightValue": "",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        1808,
-        -432
-      ],
-      "id": "111b5547-49f3-45cc-a430-d45e2f4d3910",
-      "name": "If1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const request = $('IP und Datum').first().json;\n\nconst rows = $input.all()\n  .map(item => item.json)\n  .filter(row => row.quotaKey);\n\nconst ipRow = rows.find(\n  row => row.quotaKey === request.quotaKey\n);\n\nconst globalRow = rows.find(\n  row => row.quotaKey === request.globalQuotaKey\n);\n\nreturn [{\n  json: {\n    ...request,\n\n    ipCount: Number(ipRow?.count ?? 0),\n    globalCount: Number(globalRow?.count ?? 0),\n\n    lastRequest: Number(ipRow?.lastRequest ?? 0),\n\n    ipRowExists: Boolean(ipRow),\n    globalRowExists: Boolean(globalRow)\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        336,
-        -544
-      ],
-      "id": "34dd46d1-5671-4a12-b100-670a2d131ace",
-      "name": "Prepare Quotas"
+      "id": "dc2b1f36-bad1-439d-94ec-8a155fe8ef85",
+      "name": "Create Updated Quotas"
     },
     {
       "parameters": {
@@ -333,36 +299,21 @@
         -448
       ],
       "id": "3f8a79d3-7c80-4f45-9332-916389035315",
-      "name": "Upsert row(s)",
+      "name": "Save Updated Quotas",
       "alwaysOutputData": true
     },
     {
       "parameters": {
-        "jsCode": "const data = $input.first().json;\n\nreturn [\n  {\n    json: {\n      quotaKey: data.quotaKey,\n      ip: data.ip,\n      date: data.date,\n      count: Number(data.ipCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  },\n  {\n    json: {\n      quotaKey: data.globalQuotaKey,\n      ip: '',\n      date: data.date,\n      count: Number(data.globalCount ?? 0) + 1,\n      lastRequest: Number(data.requestTime)\n    }\n  }\n];"
+        "jsCode": "/**\n * Parses the AI response into a JavaScript object.\n *\n * This node:\n * - removes Markdown code block markers\n * - converts the JSON string into an object\n * - forwards the parsed recipes to the next node\n *\n * Throws an error if the response is not valid JSON.\n */\nconst output = $input.first().json.output;\n\nconst cleanedOutput = output\n  .replace(/^```json\\s*/i, '')\n  .replace(/^```\\s*/i, '')\n  .replace(/\\s*```$/, '')\n  .trim();\n\nconst parsed = JSON.parse(cleanedOutput);\n\nreturn [\n  {\n    json: parsed\n  }\n]"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        784,
-        -448
+        1584,
+        -432
       ],
-      "id": "dc2b1f36-bad1-439d-94ec-8a155fe8ef85",
-      "name": "Prepare Counter Update"
-    },
-    {
-      "parameters": {
-        "options": {
-          "responseCode": 429
-        }
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        784,
-        -640
-      ],
-      "id": "a267bb45-e5ca-4518-b971-8a7263361b53",
-      "name": "Error for Request"
+      "id": "5dbfbde8-faf8-48f8-8461-0afdc2e4b516",
+      "name": "Parse AI Response"
     },
     {
       "parameters": {
@@ -377,20 +328,69 @@
         -256
       ],
       "id": "233e7ed8-2081-4062-9df1-c9aff268f518",
-      "name": "error for ingridiens"
+      "name": "Return Ingredient Validation Error"
     },
     {
       "parameters": {
-        "jsCode": "const output = $input.first().json.output;\n\nconst cleanedOutput = output\n  .replace(/^```json\\s*/i, '')\n  .replace(/^```\\s*/i, '')\n  .replace(/\\s*```$/, '')\n  .trim();\n\nconst parsed = JSON.parse(cleanedOutput);\n\nreturn [\n  {\n    json: parsed\n  }\n]"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5cb88701-415c-4b35-b12a-90d9f58e87bc",
+              "leftValue": "={{ $json.error !== undefined }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1808,
+        -432
+      ],
+      "id": "111b5547-49f3-45cc-a430-d45e2f4d3910",
+      "name": "Check for Validation Errors"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2032,
+        -480
+      ],
+      "id": "8be091a6-2f62-4db0-8f6a-351a2ab3ca2a",
+      "name": "Return Recipe Response"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Prepares the generated recipes for storage.\n *\n * This node:\n * - iterates over all generated recipes\n * - adds a creation timestamp to each recipe\n * - returns each recipe as a separate n8n item\n *\n * The prepared records are stored in the database\n * in the following workflow step.\n */\nconst recipes = $json.recipes;\n\nreturn recipes.map(recipe => ({\n  json: {\n    ...recipe,\n    createdAt: new Date().toISOString()\n  }\n}));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1584,
-        -432
+        2256,
+        -480
       ],
-      "id": "5dbfbde8-faf8-48f8-8461-0afdc2e4b516",
-      "name": "to json"
+      "id": "49e4827d-e441-459d-94df-9892539fc9f6",
+      "name": "Prepare Recipes for Storage"
     },
     {
       "parameters": {
@@ -408,7 +408,7 @@
         -480
       ],
       "id": "8618b529-565a-49f3-8ab1-e96037a5ddb2",
-      "name": "fierbase push"
+      "name": "Save Recipes to Firebase"
     }
   ],
   "pinData": {},
@@ -428,7 +428,7 @@
       "main": [
         [
           {
-            "node": "IP und Datum",
+            "node": "Generate Request Metadata",
             "type": "main",
             "index": 0
           }
@@ -439,14 +439,14 @@
       "main": [
         [
           {
-            "node": "to json",
+            "node": "Parse AI Response",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "error for ingridiens",
+            "node": "Return Ingredient Validation Error",
             "type": "main",
             "index": 0
           }
@@ -464,58 +464,29 @@
         ]
       ]
     },
-    "Respond to Webhook": {
+    "Prepare Quotas": {
       "main": [
         [
           {
-            "node": "Code in JavaScript1",
+            "node": "Validate Rate Limits",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript1": {
+    "Generate Request Metadata": {
       "main": [
         [
           {
-            "node": "fierbase push",
+            "node": "Load User Quota",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "Error for Request",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Prepare Counter Update",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IP und Datum": {
-      "main": [
-        [
-          {
-            "node": "Get row(s)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get row(s)": {
+    "Load User Quota": {
       "main": [
         [
           {
@@ -526,36 +497,36 @@
         ]
       ]
     },
-    "If1": {
+    "Validate Rate Limits": {
       "main": [
         [
           {
-            "node": "error for ingridiens",
+            "node": "Return Rate Limit Error",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Create Updated Quotas",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Prepare Quotas": {
+    "Create Updated Quotas": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Save Updated Quotas",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Upsert row(s)": {
+    "Save Updated Quotas": {
       "main": [
         [
           {
@@ -566,22 +537,51 @@
         ]
       ]
     },
-    "Prepare Counter Update": {
+    "Parse AI Response": {
       "main": [
         [
           {
-            "node": "Upsert row(s)",
+            "node": "Check for Validation Errors",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "to json": {
+    "Check for Validation Errors": {
       "main": [
         [
           {
-            "node": "If1",
+            "node": "Return Ingredient Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Recipe Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Recipe Response": {
+      "main": [
+        [
+          {
+            "node": "Prepare Recipes for Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Recipes for Storage": {
+      "main": [
+        [
+          {
+            "node": "Save Recipes to Firebase",
             "type": "main",
             "index": 0
           }
@@ -594,7 +594,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "ae95d1ef-f5dc-4a98-9726-8de9f72064d0",
+  "versionId": "04ec695f-2c34-4b87-b24f-ed6536ac888c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "dff6dedf8728e0da4a97d3a03e1f8f156a45b28db757eed51cce0bea7cb5fe42"
