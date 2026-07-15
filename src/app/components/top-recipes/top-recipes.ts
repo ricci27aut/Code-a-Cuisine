@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FierbaseCookbook } from '../../shared/fierbase-cookbook'
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-top-recipes',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './top-recipes.html',
   styleUrl: './top-recipes.scss',
 })

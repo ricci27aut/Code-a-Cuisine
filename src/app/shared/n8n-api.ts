@@ -12,7 +12,7 @@ export class N8nApi {
   dataLoaded = signal(false);
   errorIngredients = signal(false);
   errorQuota = signal(false);
-  url: string = 'https://ricci27aut.app.n8n.cloud/webhook/recipe';
+  url: string = 'https://ricci27aut.app.n8n.cloud/webhook-test/recipe';
 
   /**
    * Sends the current recipe request to the backend.

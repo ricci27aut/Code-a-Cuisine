@@ -1,6 +1,6 @@
 <article>
     <div *ngFor="let recipe of topRecipes()" class="top-recipes">
-        <div class="top-recipes__header">
+        <div class="top-recipes__header" [routerLink]="['/View',recipe.category ,recipe.name]">
             <h2><img src="assets/img/preferences/schedule.png">Cooking Time:{{recipe.cookingTime}}min</h2>
             <h1>{{ recipe.name }}</h1>
         </div>
