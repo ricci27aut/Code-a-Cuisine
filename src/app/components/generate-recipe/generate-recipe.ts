@@ -71,7 +71,7 @@ export class GenrateRecipe {
 
   /** Clears the ingredient and quantity input elements. */
   clearInput(): void {
-    this.quantity.nativeElement.value = '';
+    this.quantity.nativeElement.value = '100';
     this.ingred.nativeElement.value = '';
   }
 

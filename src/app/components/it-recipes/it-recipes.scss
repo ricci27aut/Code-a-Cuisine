@@ -4,6 +4,7 @@ main {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    min-height: 100vh;
     color: $font-green;
     font-family: 'Quicksand';
 }
@@ -24,18 +25,18 @@ section {
 }
 
 .title-container {
-    height: clamp(90px,16vw, 150px);
+    height: clamp(10px, 16vh, 200px);
     width: 100%;
     @include flex-center;
    
     background-repeat: no-repeat;
     background-position: center;
-    background-size: clamp(320px, 100%, 1440px) clamp(87px,16vw, 150px);
+    background-size: clamp(300px, 100%, 1440px) auto;
     margin: 0 20px 50px 20px;
 
     h1 {
         color: black;
-        font-size: clamp(24px, 5vw, 40px);
+        font-size: clamp(20px, 4vw, 40px);
         font-family: 'Quicksand';
         color: #10310B;
     }
@@ -47,7 +48,9 @@ section {
 
 .bg-German {
   background-image: url('../../../../public/assets/img/cookbook/it-recipes/German.png');
-   padding-bottom: 10px;
+   h1{
+ padding-bottom: 5px !important;
+  }
 }
 
 .bg-Japanese {
@@ -57,7 +60,9 @@ section {
 
 .bg-Gourmet {
   background-image: url('../../../../public/assets/img/cookbook/it-recipes/Gourmet.png');
-  padding-top: 15px;
+  h1{
+ padding-top: clamp(8px, 2vw, 20px) !important;
+  }
 }
 
 .bg-Indian {
@@ -134,9 +139,9 @@ section {
 }
 
 footer {
-    position: absolute;
+    position: static;
     bottom: 20px;
-    margin-top: 50px;
+   margin-top: auto;
     width: 100%;
 
     div {
@@ -252,5 +257,17 @@ footer {
 
     .title-container {
         margin-top: 40px;
+    }
+}
+
+
+@media (max-width: 400px) {
+    section{
+        padding: 0 5px;
+    }
+
+    .title-container {
+        margin: 40px 20px 20px 20px;
+         height: 50px;
     }
 }

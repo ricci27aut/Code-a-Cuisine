@@ -24,7 +24,7 @@ export class TopRecipes {
         ? Object.entries(data).map(([id, recipe]: any) => ({
           id,
           ...recipe
-        }))
+        })).filter(recipe => (recipe.likes || 0) > 0)
         : [];
 
       recipes.sort((a, b) => (b.likes || 0) - (a.likes || 0));

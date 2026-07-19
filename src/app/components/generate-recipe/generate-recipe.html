@@ -22,7 +22,7 @@
             <div class="add-container">
                 <h3 class="text">Serving size</h3>
                 <div>
-                    <input #quantity type="number" class="no-spinner" placeholder="100">
+                    <input #quantity type="number" class="no-spinner" value="100">
                     <app-drop-down (unitSelected)="selectUnit = $event"></app-drop-down>
                     <img (click)="addIngredient()" src="assets/img/+.png">
                 </div>

@@ -43,16 +43,18 @@ article {
 }
 
 .content-divider {
-    background-size: 100% clamp(70px, 12vw, 148px);
+     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
-    height: clamp(70px, 12vw, 148px);
+   width: 100%;
+    height: clamp(90px, 15vw, 148px);
+
     @include flex-center;
 
     h2{
         font-weight: 600;
-        font-size: clamp(24px, 3vw, 32px);
+        font-size: clamp(18px, 4vw, 32px);
         color: #1E5515;
     }
 }
@@ -63,6 +65,8 @@ article {
 
 .bg-Directions {
     background-image: url(../../../../public/assets/img/view/Directions.png);
+    max-width: 1150.75px;
+    max-height: 134px;
 }
 
 .heat-line-container {
@@ -265,7 +269,7 @@ footer {
 }
 
 .padding-center{
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 @media (max-width: 1000px) {
@@ -349,4 +353,8 @@ footer {
     article {
         width: 95%;
     }
+
+    .padding-center{
+    padding-top: 5px;
+}
 }
